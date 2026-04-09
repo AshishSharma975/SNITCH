@@ -4,6 +4,8 @@ import { register } from "../controllers/auth.controllers.js";
 const router = Router();
 
 
+
+
 router.post('/register', validateRegisterUser, register)
 
 export default router;
