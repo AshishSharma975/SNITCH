@@ -26,39 +26,39 @@ const Register = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!formData.fullname || !formData.email || !formData.contact || !formData.password) {
-    setError("All fields are required");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError("");
-
-    const res = await handleregister({
-      email: formData.email.trim(),
-      password: formData.password,
-      fullname: formData.fullname.trim(),
-      contact: formData.contact.trim(),
-      role: formData.isSeller ? "seller" : "buyer", 
-    });
-
-    if (res) {
-      navigate("/"); 
+    if (!formData.fullname || !formData.email || !formData.contact || !formData.password) {
+      setError("All fields are required");
+      return;
     }
-  } catch (err) {
-    if (err.response?.data?.errors) {
-      setError(err.response.data.errors[0].message);
-    } else {
-      setError(err.response?.data?.message || "Registration failed");
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await handleregister({
+        email: formData.email.trim(),
+        password: formData.password,
+        fullname: formData.fullname.trim(),
+        contact: formData.contact.trim(),
+        role: formData.isSeller ? "seller" : "buyer",
+      });
+
+      if (res) {
+        navigate("/");
+      }
+    } catch (err) {
+      if (err.response?.data?.errors) {
+        setError(err.response.data.errors[0].msg);
+      } else {
+        setError(err.response?.data?.message || "Registration failed");
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const inputClass =
     "w-full bg-[#20201f] text-[#ffffff] placeholder-[#adaaaa] rounded-3xl px-6 py-4 text-[15px] outline-none transition-all duration-300 focus:bg-[#262626] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.4)]";
@@ -248,6 +248,26 @@ const handleSubmit = async (e) => {
                   Access exclusive seller tools upon verification.
                 </p>
               )}
+            </div>
+
+            <div className="mt-4 flex justify-center">
+              <a
+                href="/api/auth/google"
+                className="flex items-center gap-3 px-5 py-3 w-full max-w-sm justify-center 
+    bg-[#1f1f1f] hover:bg-[#2a2a2a] text-white rounded-xl 
+    border border-gray-700 hover:border-gray-500 
+    transition-all duration-300 shadow-md hover:shadow-lg"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="google"
+                  className="w-5 h-5"
+                />
+
+                <span className="text-sm font-medium tracking-wide">
+                  Continue with Google
+                </span>
+              </a>
             </div>
 
             <button

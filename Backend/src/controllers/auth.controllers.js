@@ -30,6 +30,13 @@ export const register = async (req, res) => {
     const { email, contact, password, fullname, isSeller } = req.body;
 
     try {
+
+        if (!email || !contact || !password || !fullname) {
+            return res.status(400).json({
+                message: "All fields are required"
+            });
+        }
+
         const existingUser = await userModel.findOne({
             $or: [
                 { email },
@@ -37,8 +44,12 @@ export const register = async (req, res) => {
             ]
         });
 
+        console.log("EXISTING USER:", existingUser);
+
         if (existingUser) {
-            return res.status(400).json({ message: "User with this email or contact already exists" });
+            return res.status(400).json({ 
+                message: "User with this email or contact already exists" 
+            });
         }
 
         const user = await userModel.create({
@@ -49,13 +60,10 @@ export const register = async (req, res) => {
             role: isSeller ? "seller" : "buyer"
         });
 
-        return res.status(201).json({
-            message: "User registered successfully",
-            user
-        });
+        await sendTokenResponse(user, res, "User registered successfully");
 
     } catch (error) {
-        console.log(error);
+        console.log("ERROR:", error);
         return res.status(500).json({
             message: "Server error"
         });
@@ -81,4 +89,31 @@ export const login = async (req, res) => {
 
 
     
+};
+
+export const googleCallback = async (req, res) => {
+    try {
+        const email = req.user.emails[0].value;
+        const fullname = req.user.displayName;
+        
+        let user = await userModel.findOne({ email });
+        if (!user) {
+            user = await userModel.create({
+                email,
+                fullname,
+                contact: "Google Auth",
+                password: Math.random().toString(36).slice(-10) + "A1!"
+            });
+        }
+
+        const token = jwt.sign({
+            id: user._id,
+        }, config.JWT_SECRET);
+
+        res.cookie("token", token);
+        res.redirect("http://localhost:5173/");
+    } catch (error) {
+        console.error("Google Callback Error:", error);
+        res.redirect("http://localhost:5173/login");
+    }
 };

@@ -44,7 +44,7 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       if (err.response?.data?.errors) {
-        setError(err.response.data.errors[0].message);
+        setError(err.response.data.errors[0].msg);
       } else {
         setError(err.response?.data?.message || "Login failed");
       }
@@ -100,7 +100,7 @@ const Login = () => {
         <div className="relative w-full max-w-[480px] bg-[#1a1a1a]/80 backdrop-blur-xl rounded-[2.5rem] p-8 sm:p-10 md:p-12 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border border-[rgba(118,117,117,0.15)] flex flex-col gap-10 z-10">
           {/* Header */}
           <div className="flex flex-col gap-3">
-            <p className="text-[#3bbffa] text-sm md:text-[15px] font-semibold tracking-[0.15em] uppercase lg:hidden">
+            <p className="text-[#3b7bfa] text-sm md:text-[15px] font-semibold tracking-[0.15em] uppercase lg:hidden">
               Snitch
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-[44px] lg:text-4xl font-bold text-[#ffffff] tracking-[-0.02em] font-['Manrope'] leading-tight">
