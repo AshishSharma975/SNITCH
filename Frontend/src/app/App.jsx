@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router'
 import { routes } from "./app.routes";
 const App = () => {
   return (
-    <div className='text-amber-300'>
+    <div>
       <RouterProvider router={routes} />
     </div>
   )
