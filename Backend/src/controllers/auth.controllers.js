@@ -95,6 +95,8 @@ export const googleCallback = async (req, res) => {
     try {
         const email = req.user.emails[0].value;
         const fullname = req.user.displayName;
+        const profilePic = req.user.photos[0].value;
+        
         
         let user = await userModel.findOne({ email });
         if (!user) {
@@ -105,6 +107,7 @@ export const googleCallback = async (req, res) => {
                 password: Math.random().toString(36).slice(-10) + "A1!"
             });
         }
+
 
         const token = jwt.sign({
             id: user._id,
