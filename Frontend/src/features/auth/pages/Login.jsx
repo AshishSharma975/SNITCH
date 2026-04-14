@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
+import ContinuewithGoogle from "../components/ContinuewithGoogle";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -170,6 +171,8 @@ const Login = () => {
                 </button>
               </div>
             </div>
+
+            <ContinuewithGoogle />
 
             <button
               id="login-submit"
