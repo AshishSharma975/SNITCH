@@ -61,6 +61,8 @@ export const register = async (req, res) => {
             role: isSeller ? "seller" : "buyer"
         });
 
+        
+
         await sendTokenResponse(user, res, "User registered successfully");
 
     } catch (error) {
