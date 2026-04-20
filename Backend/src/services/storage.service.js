@@ -7,12 +7,22 @@ const client = new ImageKit({
   urlEndpoint: config.IMAGEKIT_URL_ENDPOINT,
 });
 
-export async function uploadFile({ buffer, fileName, folder = "snitch" }) {
-  const result = await client.files.upload({
-    file: buffer,
-    fileName: fileName,
-    folder: folder,
-  });
+export async function uploadFile({ buffer, fileName, mimeType, folder = "snitch" }) {
+  try {
+    const base64File = `data:${mimeType};base64,${buffer.toString("base64")}`;
 
-  return result;
+    const result = await client.files.upload({
+      file: base64File,
+      fileName: fileName,
+      folder: folder,
+    });
+
+    return {
+      url: result.url,
+      fileId: result.fileId,
+    };
+  } catch (error) {
+    console.error("IMAGEKIT UPLOAD ERROR:", error);
+    throw error;
+  }
 }

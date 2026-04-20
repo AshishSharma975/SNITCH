@@ -1,3 +1,4 @@
+// Register.jsx
 import React, { useState } from "react";
 import { Eye, EyeOff, Check, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,16 +30,13 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.fullname || !formData.email || !formData.contact || !formData.password) {
       setError("All fields are required");
       return;
     }
-
     try {
       setLoading(true);
       setError("");
-
       const res = await handleregister({
         email: formData.email.trim(),
         password: formData.password,
@@ -46,10 +44,7 @@ const Register = () => {
         contact: formData.contact.trim(),
         role: formData.isSeller ? "seller" : "buyer",
       });
-
-      if (res) {
-        navigate("/");
-      }
+      if (res) navigate("/");
     } catch (err) {
       if (err.response?.data?.errors) {
         setError(err.response.data.errors[0].msg);
@@ -62,83 +57,111 @@ const Register = () => {
   };
 
   const inputClass =
-    "w-full bg-[#20201f] text-[#ffffff] placeholder-[#adaaaa] rounded-3xl px-6 py-4 text-[15px] outline-none transition-all duration-300 focus:bg-[#262626] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.4)]";
+    "w-full bg-white border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300";
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] flex font-['Inter']">
-      {/* Left Column - Imagery (Hidden on mobile/tablet, Half-width on Desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#131313] overflow-hidden">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2000&auto=format&fit=crop')",
-          }}
+    <div
+      className="min-h-screen flex"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* ── Left Image Panel ── */}
+      <div className="hidden lg:flex lg:w-[52%] relative overflow-hidden bg-[#0a0a0a]">
+        <img
+          src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=90&w=2000&auto=format&fit=crop"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-75"
         />
-        {/* Gradient Overlay for blending into the dark theme */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0e0e0e]/60 to-[#0e0e0e]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a]/60 via-transparent to-[#0a0a0a]/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
 
-        {/* Branding Overlay */}
-        <div className="relative z-10 w-full p-12 xl:p-20 flex flex-col justify-between">
-          <div>
-            <p className="text-[#3bbffa] text-sm font-semibold tracking-[0.2em] uppercase">
-              Snitch
-            </p>
-            <h1 className="text-5xl xl:text-6xl font-bold text-[#ffffff] tracking-[-0.02em] font-['Manrope'] leading-tight mt-6">
-              Embrace
-              <br />
-              The Nocturnal
-              <br />
-              Luminance.
-            </h1>
-          </div>
-          <div>
-            <p className="text-[#adaaaa] text-[17px] leading-relaxed max-w-md">
-              Discover the latest in high-fashion editorial streetwear. Curated
-              collections for the modern aesthetic.
-            </p>
-          </div>
+        <div className="absolute top-10 left-10 right-10 flex items-center justify-between">
+          <span
+            className="text-white/90 text-[11px] tracking-[0.4em] uppercase"
+            style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300 }}
+          >
+            Snitch
+          </span>
+          <span className="text-white/30 text-[10px] tracking-[0.2em] uppercase">
+            SS '25
+          </span>
+        </div>
+
+        <div className="absolute bottom-12 left-10 right-10">
+          <h2
+            className="text-white leading-[1.05] mb-4"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(40px, 5vw, 60px)",
+              fontWeight: 300,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Dress for
+            <br />
+            <em>the moment.</em>
+          </h2>
+          <div className="w-8 h-px bg-white/30 mb-4" />
+          <p className="text-white/40 text-[11px] tracking-[0.12em] leading-relaxed max-w-xs uppercase">
+            Curated streetwear for the modern aesthetic
+          </p>
         </div>
       </div>
 
-      {/* Right Column - Registration Form (Full width on Mobile/Tablet, Half-width on Desktop) */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 md:p-12 relative overflow-hidden">
-        {/* Ambient Lighting for Form */}
-        <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] lg:w-[400px] lg:h-[400px] bg-[#3bbffa]/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen opacity-60" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] lg:w-[500px] lg:h-[500px] bg-[#a88cfb]/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen opacity-50" />
+      {/* ── Right Form Panel ── */}
+      <div className="flex-1 bg-[#faf9f7] flex items-center justify-center p-8 md:p-14 relative overflow-y-auto">
+        <div
+          className="absolute inset-0 opacity-[0.015] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
 
-        <div className="relative w-full max-w-[480px] bg-[#1a1a1a]/80 backdrop-blur-xl rounded-[2.5rem] p-8 sm:p-10 md:p-12 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border border-[rgba(118,117,117,0.15)] flex flex-col gap-10 z-10">
-          {/* Header */}
-          <div className="flex flex-col gap-3">
-            <p className="text-[#3bbffa] text-sm md:text-[15px] font-semibold tracking-[0.15em] uppercase lg:hidden">
+        <div className="relative w-full max-w-[400px] py-8">
+          {/* mobile brand */}
+          <div className="lg:hidden flex items-center justify-between mb-12">
+            <span
+              className="text-[#0a0a0a] text-[11px] tracking-[0.4em] uppercase"
+              style={{ fontWeight: 300 }}
+            >
               Snitch
-            </p>
-            <h1 className="text-3xl sm:text-4xl md:text-[44px] lg:text-4xl font-bold text-[#ffffff] tracking-[-0.02em] font-['Manrope'] leading-tight">
+            </span>
+            <span className="text-[#aaa] text-[10px] tracking-[0.2em] uppercase">
+              SS '25
+            </span>
+          </div>
+
+          {/* heading */}
+          <div className="mb-10">
+            <h1
+              className="text-[#0a0a0a] mb-2 leading-tight"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(36px, 5vw, 48px)",
+                fontWeight: 400,
+                letterSpacing: "-0.01em",
+              }}
+            >
               Create Account
             </h1>
-            <p className="text-[#adaaaa] text-sm sm:text-base md:text-[17px] leading-relaxed mt-1">
-              Join the exclusive Snitch community.
+            <p className="text-[#999] text-[13px] tracking-[0.03em]" style={{ fontWeight: 300 }}>
+              Join the Snitch community
             </p>
           </div>
 
+          {/* error */}
           {error && (
-            <div className="bg-[#9f0519]/20 text-[#ffa8a3] text-sm px-6 py-4 rounded-2xl border border-[rgba(159,5,25,0.3)]">
+            <div className="mb-6 text-[#9b2335] text-[12px] bg-[#fdf2f3] border border-[#f0d0d4] px-4 py-3 rounded-lg tracking-wide">
               {error}
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="fullname"
-                className="text-[13px] font-semibold text-[#ffffff] tracking-wide ml-2 opacity-90"
-              >
+              <label className="text-[10px] text-[#888] tracking-[0.25em] uppercase font-medium">
                 Full Name
               </label>
               <input
-                id="fullname"
                 name="fullname"
                 type="text"
                 value={formData.fullname}
@@ -150,14 +173,10 @@ const Register = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="email"
-                className="text-[13px] font-semibold text-[#ffffff] tracking-wide ml-2 opacity-90"
-              >
+              <label className="text-[10px] text-[#888] tracking-[0.25em] uppercase font-medium">
                 Email Address
               </label>
               <input
-                id="email"
                 name="email"
                 type="email"
                 value={formData.email}
@@ -169,14 +188,10 @@ const Register = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="contact"
-                className="text-[13px] font-semibold text-[#ffffff] tracking-wide ml-2 opacity-90"
-              >
-                Contact Number
+              <label className="text-[10px] text-[#888] tracking-[0.25em] uppercase font-medium">
+                Contact
               </label>
               <input
-                id="contact"
                 name="contact"
                 type="tel"
                 value={formData.contact}
@@ -187,16 +202,12 @@ const Register = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-2 relative">
-              <label
-                htmlFor="password"
-                className="text-[13px] font-semibold text-[#ffffff] tracking-wide ml-2 opacity-90"
-              >
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] text-[#888] tracking-[0.25em] uppercase font-medium">
                 Password
               </label>
-              <div className="relative group">
+              <div className="relative">
                 <input
-                  id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
@@ -204,82 +215,87 @@ const Register = () => {
                   placeholder="min. 6 characters"
                   required
                   minLength={6}
-                  className={`${inputClass} pr-14`}
+                  className={`${inputClass} pr-12`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((p) => !p)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#adaaaa] hover:text-[#ffffff] transition-colors p-2"
-                  aria-label="Toggle password"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#ccc] hover:text-[#666] transition-colors"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" strokeWidth={2} />
+                    <EyeOff className="w-4 h-4" />
                   ) : (
-                    <Eye className="w-5 h-5" strokeWidth={2} />
+                    <Eye className="w-4 h-4" />
                   )}
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 mt-2">
-              <label className="flex items-center gap-4 cursor-pointer group w-fit select-none bg-[#131313] px-5 py-4 rounded-3xl hover:bg-[#20201f] transition-colors border border-[rgba(118,117,117,0.05)]">
-                <input
-                  id="isSeller"
-                  name="isSeller"
-                  type="checkbox"
-                  checked={formData.isSeller}
-                  onChange={handleChange}
-                  className="sr-only"
-                />
-                <div
-                  className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ${formData.isSeller ? "bg-[#4f319c] shadow-[0_0_15px_rgba(79,49,156,0.5)]" : "bg-[#262626] group-hover:bg-[#2c2c2c]"}`}
-                >
-                  {formData.isSeller && (
-                    <Check className="w-4 h-4 text-white" strokeWidth={3} />
-                  )}
-                </div>
-                <span
-                  className={`text-[15px] font-medium transition-colors duration-300 ${formData.isSeller ? "text-[#a88cfb]" : "text-[#ffffff]"}`}
-                >
+            {/* Seller toggle */}
+            <label className="flex items-center gap-3.5 cursor-pointer group w-fit select-none mt-1 p-3 rounded-xl hover:bg-black/[0.02] transition-colors">
+              <input
+                name="isSeller"
+                type="checkbox"
+                checked={formData.isSeller}
+                onChange={handleChange}
+                className="sr-only"
+              />
+              <div
+                className={`w-[18px] h-[18px] rounded-md border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+                  formData.isSeller
+                    ? "bg-[#0a0a0a] border-[#0a0a0a]"
+                    : "bg-white border-[#d5d2cd] group-hover:border-[#999]"
+                }`}
+              >
+                {formData.isSeller && (
+                  <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                )}
+              </div>
+              <div>
+                <p className="text-[12px] text-[#333] font-medium tracking-wide">
                   Register as Seller
-                </span>
-              </label>
-              {formData.isSeller && (
-                <p className="text-[13px] text-[#adaaaa] ml-4">
-                  Access exclusive seller tools upon verification.
                 </p>
-              )}
+                {formData.isSeller && (
+                  <p className="text-[11px] text-[#aaa] mt-0.5">
+                    Seller tools available after verification
+                  </p>
+                )}
+              </div>
+            </label>
+
+            {/* divider */}
+            <div className="flex items-center gap-3 my-1">
+              <div className="flex-1 h-px bg-[#ece9e4]" />
+              <span className="text-[10px] text-[#ccc] tracking-[0.15em] uppercase">or</span>
+              <div className="flex-1 h-px bg-[#ece9e4]" />
             </div>
 
             <ContinuewithGoogle />
+
             <button
-              id="register-submit"
               type="submit"
               disabled={loading}
-              className="mt-6 w-full py-[18px] px-8 rounded-full text-[16px] font-bold text-[#00121d] bg-[linear-gradient(45deg,#3bbffa,#a88cfb)] hover:opacity-90 active:scale-[0.98] transition-all duration-300 shadow-[0_10px_30px_-10px_rgba(59,191,250,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#0a0a0a] hover:bg-[#1c1c1c] text-white py-4 rounded-xl text-[12px] tracking-[0.2em] uppercase font-medium transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed mt-1"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin text-[#00121d]" />
-                  Authenticating...
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Creating Account
                 </span>
               ) : (
-                "Register"
+                "Create Account"
               )}
             </button>
           </form>
 
-          {/* Footer Link */}
-          <div className="text-center mt-2 flex flex-col gap-4">
-            <p className="text-[14px] text-[#adaaaa]">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-[#3bbffa] font-semibold hover:text-[#a88cfb] transition-colors ml-1"
-              >
-                Sign In
-              </Link>
-            </p>
+          <div className="mt-8 pt-6 border-t border-[#ece9e4] flex items-center justify-between">
+            <p className="text-[12px] text-[#aaa]">Have an account?</p>
+            <Link
+              to="/login"
+              className="text-[11px] text-[#0a0a0a] tracking-[0.2em] uppercase font-medium hover:text-[#555] transition-colors underline underline-offset-4 decoration-[#ccc]"
+            >
+              Sign In
+            </Link>
           </div>
         </div>
       </div>

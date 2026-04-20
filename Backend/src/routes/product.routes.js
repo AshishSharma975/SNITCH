@@ -16,8 +16,8 @@ const router = express.Router();
 router.post(
   "/create",
   authenticateSeller,
-  createProductValidator,
   upload.array("images", 7), 
+  createProductValidator,
   createProduct              
 );
 

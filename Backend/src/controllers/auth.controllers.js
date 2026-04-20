@@ -10,7 +10,11 @@ async function sendTokenResponse(user, res, message) {
         role: user.role
     }, config.JWT_SECRET)
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    })
 
     res.status(200).json({
         message,
@@ -116,7 +120,11 @@ export const googleCallback = async (req, res) => {
             id: user._id,
         }, config.JWT_SECRET);
 
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
         res.redirect("http://localhost:5173/");
     } catch (error) {
         console.error("Google Callback Error:", error);
