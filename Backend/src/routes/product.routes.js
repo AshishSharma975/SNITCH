@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticateSeller } from "../middlewares/auth.middleware.js";
-import { createProduct,getSellerProduct } from "../controllers/product.controller.js";
+import { createProduct,getSellerProduct,getAllProduct } from "../controllers/product.controller.js";
 import multer from "multer";
 import { createProductValidator } from "../validator/product.validator.js";
 
@@ -22,6 +22,8 @@ router.post(
 );
 
 router.get("/seller",authenticateSeller,getSellerProduct)
+
+router.get("/",getAllProduct)
 
 
 export default router;

@@ -84,3 +84,21 @@ export async function getSellerProduct(req,res){
     })
   }
 }
+
+export async function getAllProduct(req,res){
+  try {
+    
+  const products = await ProductModel.find()
+
+  return res.status(200).json({
+    message:"Products get successfully",
+    success:true,
+    products
+  })
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message,
+      error:error
+    })
+  }
+}

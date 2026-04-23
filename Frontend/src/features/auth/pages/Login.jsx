@@ -28,11 +28,17 @@ const Login = () => {
     try {
       setLoading(true);
       setError("");
-      await handleLogin({
+     const user = await handleLogin({
         email: formData.email.trim(),
         password: formData.password,
       });
-      navigate("/");
+      if(user.role === "buyer"){
+        navigate("/");
+      }else if(user.role === "seller"){
+        navigate("/seller/dashboard");
+      }else{
+        navigate("/");
+      }
     } catch (err) {
       if (err.response?.data?.errors) {
         setError(err.response.data.errors[0].msg);

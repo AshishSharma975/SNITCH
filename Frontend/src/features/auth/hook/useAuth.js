@@ -19,7 +19,7 @@ export const useAuth = () => {
 
       dispatch(setUser(data.user));
 
-      return data;
+      return data.user;
     } catch (err) {
       dispatch(setError(err?.response?.data?.message || "Registration Error"));
       throw err;
@@ -37,7 +37,7 @@ export const useAuth = () => {
       });
 
       dispatch(setUser(data.user));
-      return data;
+      return data.user;
     } catch (err) {
       dispatch(setError(err?.response?.data?.message || "Login Error"));
       throw err;
