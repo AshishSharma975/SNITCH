@@ -131,3 +131,26 @@ export const googleCallback = async (req, res) => {
         res.redirect("http://localhost:5173/login");
     }
 };
+
+
+export const getMe = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user._id);
+        res.status(200).json({
+            message: "User fetched successfully",
+            success: true,
+            user:{
+                _id: user._id,
+                email: user.email,
+                contact: user.contact,
+                fullname: user.fullname,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.log("ERROR:", error);
+        return res.status(500).json({
+            message: "Server error"
+        });
+    }
+}

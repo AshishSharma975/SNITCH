@@ -4,7 +4,7 @@ import Login from "../features/auth/pages/Login";
 import Home from "./Home";
 import CreateProduct from "../features/products/pages/createProduct";
 import Dashboard from "../features/products/pages/Dashboard";
-
+import Protected from "../features/auth/components/Protected";
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -20,10 +20,10 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/seller/create-product",
-    element: <CreateProduct />,
+    element: <Protected role="seller"><CreateProduct /></Protected>,
   },
   {
     path: "/seller/dashboard",
-    element: <Dashboard />,
+    element: <Protected role="seller"><Dashboard /></Protected>,
   },
 ]);
