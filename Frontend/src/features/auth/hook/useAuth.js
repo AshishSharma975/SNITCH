@@ -46,5 +46,11 @@ export const useAuth = () => {
     }
   }
 
-  return { handleregister, handleLogin };
+  async function handleLogout() {
+    dispatch(setUser(null));
+    // Optionally: call an API to clear the backend cookie if not using HTTP-only cookies that clear on session or having a logout route. (Assuming logout route or just clearing state)
+    return true;
+  }
+
+  return { handleregister, handleLogin, handleLogout };
 };
