@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useProduct } from "../hook/useproduct";
 import { ShoppingBag, Search, User, Menu, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 const Home = () => {
   const navigate = useNavigate();
   const allproduct = useSelector((state) => state.product.allproduct);
@@ -183,6 +182,7 @@ const Home = () => {
           </div>
         ) : (
           <div
+          
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
@@ -191,6 +191,7 @@ const Home = () => {
           >
             {allproduct.map((product) => (
               <div
+                onClick={() => navigate(`/product/${product._id}`)}
                 key={product._id}
                 style={{
                   cursor: "pointer",

@@ -102,3 +102,30 @@ export async function getAllProduct(req,res){
     })
   }
 }
+
+export async function getProductById(req,res){
+  try {
+    
+  const {productId} = req.params;
+
+  const product = await ProductModel.findById(productId);
+
+  if(!product){
+    return res.status(404).json({
+      message:"Product not found",
+      success:false,
+      error:"Product not found"
+    })
+  }
+  return res.status(200).json({
+    message:"Product deteails fetched successfully",
+    success:true,
+    product
+  })
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message,
+      error:error
+    })
+  }
+}

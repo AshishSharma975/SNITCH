@@ -37,4 +37,14 @@ export async function getAllProduct(){
     }
 }
 
+
+export async function getProductById(productId){
+    try {
+        const response = await productApi.get(`/details/${productId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export default productApi;
