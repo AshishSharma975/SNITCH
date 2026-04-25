@@ -11,11 +11,27 @@ const ProductDeteail = () => {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
 
+  const [selectedAttributes, setSelectedAttributes] = useState({});
+
   const fetchProductData = async () => {
     try {
       setLoading(true);
       const data = await handleGetProductById(productId);
       setProduct(data);
+      
+      // Initialize default attributes if variants exist
+      if (data.variants && data.variants.length > 0) {
+        const firstVariant = data.variants[0];
+        // Handle different attribute structures
+        let attrs = firstVariant.attributes || {};
+        if (Array.isArray(attrs)) attrs = attrs[0] || {};
+        
+        const initialAttrs = {};
+        Object.entries(attrs).forEach(([key, val]) => {
+          if (!key.startsWith('_')) initialAttrs[key] = val;
+        });
+        setSelectedAttributes(initialAttrs);
+      }
     } catch (error) {
       console.error('Error fetching product data:', error);
     } finally {
@@ -27,15 +43,60 @@ const ProductDeteail = () => {
     fetchProductData();
   }, [productId]);
 
+  // Compute all unique attributes available across variants
+  const getAllAttributeGroups = () => {
+    if (!product?.variants) return {};
+    const groups = {};
+    product.variants.forEach(variant => {
+      let attrs = variant.attributes || {};
+      if (Array.isArray(attrs)) attrs = attrs[0] || {};
+      Object.entries(attrs).forEach(([key, val]) => {
+        if (key.startsWith('_')) return;
+        if (!groups[key]) groups[key] = new Set();
+        groups[key].add(val);
+      });
+    });
+    // Convert sets to arrays
+    const result = {};
+    Object.keys(groups).forEach(key => result[key] = Array.from(groups[key]));
+    return result;
+  };
+
+  // Find the variant that matches currently selected attributes
+  const getSelectedVariant = () => {
+    if (!product?.variants) return null;
+    return product.variants.find(variant => {
+      let attrs = variant.attributes || {};
+      if (Array.isArray(attrs)) attrs = attrs[0] || {};
+      return Object.entries(selectedAttributes).every(([key, val]) => attrs[key] === val);
+    });
+  };
+
+  const selectedVariant = getSelectedVariant();
+  
+  // Display Data with Fallback Logic
+  const getDisplayData = () => {
+    const displayPrice = selectedVariant?.price?.amount || product?.price?.amount || 0;
+    const displayCurrency = selectedVariant?.price?.currency || product?.price?.currency || 'INR';
+    const displayImages = (selectedVariant?.images && selectedVariant.images.length > 0) 
+      ? selectedVariant.images 
+      : (product?.images || []);
+    const displayStock = selectedVariant ? selectedVariant.stock : (product?.variants?.reduce((acc, v) => acc + (v.stock || 0), 0) || 0);
+
+    return { displayPrice, displayCurrency, displayImages, displayStock };
+  };
+
+  const { displayPrice, displayCurrency, displayImages, displayStock } = getDisplayData();
+
   const handleNextImage = () => {
-    if (product?.images?.length > 0) {
-      setActiveImage((prev) => (prev + 1) % product.images.length);
+    if (displayImages?.length > 0) {
+      setActiveImage((prev) => (prev + 1) % displayImages.length);
     }
   };
 
   const handlePrevImage = () => {
-    if (product?.images?.length > 0) {
-      setActiveImage((prev) => (prev - 1 + product.images.length) % product.images.length);
+    if (displayImages?.length > 0) {
+      setActiveImage((prev) => (prev - 1 + displayImages.length) % displayImages.length);
     }
   };
 
@@ -62,9 +123,7 @@ const ProductDeteail = () => {
     );
   }
 
-  const price = product.price?.amount || 0;
-  const currency = product.price?.currency || 'USD';
-  const images = product.images || [];
+  const attributeGroups = getAllAttributeGroups();
 
   return (
     <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
@@ -108,7 +167,7 @@ const ProductDeteail = () => {
           <div className="lg:col-span-6 xl:col-span-6 flex flex-col md:flex-row gap-4 md:gap-6 lg:max-w-[600px]">
             {/* Thumbnails (Desktop) */}
             <div className="hidden md:flex flex-col gap-3 w-20 shrink-0">
-              {images.map((img, idx) => (
+              {displayImages.map((img, idx) => (
                 <div 
                   key={idx}
                   onClick={() => setActiveImage(idx)}
@@ -122,10 +181,10 @@ const ProductDeteail = () => {
             {/* Main Image Container */}
             <div className="flex-1 relative aspect-[4/5] md:aspect-[3/4] bg-[#f2f1ef] overflow-hidden group rounded-sm shadow-sm max-w-[500px] lg:max-w-none mx-auto lg:mx-0">
 
-              {images.length > 0 ? (
+              {displayImages.length > 0 ? (
                 <>
                   <img 
-                    src={images[activeImage]?.url} 
+                    src={displayImages[activeImage]?.url} 
                     alt={product.title} 
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
@@ -161,7 +220,7 @@ const ProductDeteail = () => {
                   </button>
 
                   <div className="flex gap-2.5">
-                    {images.map((_, idx) => (
+                    {displayImages.map((_, idx) => (
                       <button 
                         key={idx}
                         onClick={() => setActiveImage(idx)}
@@ -209,14 +268,49 @@ const ProductDeteail = () => {
 
             <div className="flex items-baseline gap-2 mb-8">
               <span className="text-2xl md:text-3xl font-medium tracking-tight">
-                {price.toLocaleString()}
+                {displayPrice.toLocaleString()}
               </span>
               <span className="text-xs font-semibold text-[#999] tracking-widest uppercase">
-                {currency}
+                {displayCurrency}
               </span>
-              <span className="ml-4 text-[10px] text-[#22c55e] font-bold tracking-widest uppercase bg-[#22c55e]/10 px-2 py-0.5 rounded">
-                In Stock
-              </span>
+              {displayStock > 0 ? (
+                <span className="ml-4 text-[10px] text-[#22c55e] font-bold tracking-widest uppercase bg-[#22c55e]/10 px-2 py-0.5 rounded">
+                  In Stock
+                </span>
+              ) : (
+                <span className="ml-4 text-[10px] text-[#ef4444] font-bold tracking-widest uppercase bg-[#ef4444]/10 px-2 py-0.5 rounded">
+                  Sold Out
+                </span>
+              )}
+            </div>
+
+            {/* ── Attribute Selectors ── */}
+            <div className="space-y-8 mb-10">
+              {Object.entries(attributeGroups).map(([groupName, values]) => (
+                <div key={groupName}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-[10px] font-bold tracking-[0.2em] text-[#0a0a0a] uppercase">{groupName}</h3>
+                    {groupName.toLowerCase() === 'size' && (
+                      <span className="text-[9px] text-[#999] underline cursor-pointer tracking-widest uppercase">Size Guide</span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {values.map((val) => (
+                      <button
+                        key={val}
+                        onClick={() => setSelectedAttributes(prev => ({ ...prev, [groupName]: val }))}
+                        className={`px-6 py-3 text-[11px] font-bold tracking-widest uppercase transition-all border rounded-sm ${
+                          selectedAttributes[groupName] === val
+                            ? 'bg-[#0a0a0a] text-white border-[#0a0a0a]'
+                            : 'bg-white text-[#0a0a0a] border-[#ede9e3] hover:border-[#0a0a0a]'
+                        }`}
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div className="h-px bg-[#ede9e3] w-full mb-8"></div>
@@ -302,4 +396,4 @@ const ProductDeteail = () => {
 
 export default ProductDeteail;
 
-
+
