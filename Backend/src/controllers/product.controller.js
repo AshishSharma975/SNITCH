@@ -129,3 +129,107 @@ export async function getProductById(req,res){
     })
   }
 }
+
+export async function createProductVariant(req,res){
+  try {
+    const productId = req.params.productId;
+    const product = await ProductModel.findOne({
+      _id: productId,
+      seller: req.user._id
+    });
+
+    if(!product){
+      return res.status(404).json({
+        message: "Product not found",
+        success: false,
+        error: "Product not found"
+      });
+    }
+
+    const files = req.files;
+    const images = [];  
+    if(files && files.length > 0){
+      const uploadedImages = await Promise.all(files.map(async (file) => {
+        const uploaded = await uploadFile({
+          buffer: file.buffer,
+          fileName: file.originalname,
+          mimeType: file.mimetype,
+        });
+        return { url: uploaded.url };
+      }));
+      images.push(...uploadedImages);
+    } 
+
+    const price = {
+      amount: req.body.priceAmount ? parseFloat(req.body.priceAmount) : product.price.amount,
+      currency: req.body.currency || product.price.currency
+    };
+    
+    const stock = req.body.stock ? parseInt(req.body.stock) : 0;
+    const attributes = JSON.parse(req.body.attributes || "{}");
+
+    product.variants.push({
+      images,
+      price,
+      stock,
+      attributes
+    });
+
+    await product.save();
+
+    res.status(200).json({
+      message: "Variant created successfully",
+      success: true,
+      product
+    });
+
+  } catch (error) {
+    console.error("Error creating variant:", error);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+export async function deleteProductVariant(req, res) {
+  try {
+    const { productId, variantId } = req.params;
+    const product = await ProductModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+        success: false
+      });
+    }
+
+    // Check if seller owns the product
+    if (product.seller.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Unauthorized",
+        success: false
+      });
+    }
+
+    // Remove the variant
+    product.variants = product.variants.filter(v => v._id.toString() !== variantId);
+    
+    await product.save();
+
+    res.status(200).json({
+      message: "Variant deleted successfully",
+      success: true,
+      product
+    });
+
+  } catch (error) {
+    console.error("Error deleting variant:", error);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      error: error.message
+    });
+  }
+}

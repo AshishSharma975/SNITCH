@@ -39,8 +39,40 @@ export async function getAllProduct(){
 
 
 export async function getProductById(productId){
+
+
     try {
         const response = await productApi.get(`/details/${productId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function addProductVariant(productId, newProductVariant){
+    const formData = new FormData();
+
+    newProductVariant.images.forEach((img) => {
+        if(img.file) {
+            formData.append("images", img.file);
+        }
+    });
+
+    formData.append("stock", newProductVariant.stock);
+    formData.append("priceAmount", newProductVariant.price.amount);
+    formData.append("attributes", JSON.stringify(newProductVariant.attributes));
+
+    try {
+        const response = await productApi.post(`/${productId}/variant`, formData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteProductVariant(productId, variantId){
+    try {
+        const response = await productApi.delete(`/${productId}/variant/${variantId}`);
         return response.data;
     } catch (error) {
         throw error;

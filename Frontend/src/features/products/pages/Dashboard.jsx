@@ -364,6 +364,7 @@ const Dashboard = () => {
                 </p>
               </div>
               <button
+
                 onClick={() => navigate("/seller/create-product")}
                 style={{
                   backgroundColor: "transparent",
@@ -391,6 +392,7 @@ const Dashboard = () => {
             >
               {sellerproduct.map((product) => (
                 <div
+                  onClick={() => navigate(`/seller/product/${product._id}`)}
                   key={product._id}
                   style={{
                     group: "product-card",

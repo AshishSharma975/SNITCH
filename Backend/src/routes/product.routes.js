@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticateSeller } from "../middlewares/auth.middleware.js";
-import { createProduct,getSellerProduct,getAllProduct,getProductById } from "../controllers/product.controller.js";
+import { createProduct,getSellerProduct,getAllProduct,getProductById,createProductVariant,deleteProductVariant } from "../controllers/product.controller.js";
 import multer from "multer";
 import { createProductValidator } from "../validator/product.validator.js";
 
@@ -27,5 +27,7 @@ router.get("/",getAllProduct)
 
 router.get("/details/:productId",getProductById)
 
+router.post("/:productId/variant",authenticateSeller,upload.array("images", 7),createProductVariant)
+router.delete("/:productId/variant/:variantId", authenticateSeller, deleteProductVariant)
 
 export default router;
