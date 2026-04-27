@@ -7,6 +7,9 @@ import { useEffect } from 'react';
 
 import { Toaster } from 'react-hot-toast';
 
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
+
 const App = () => {
 
   const {handleGetMe} = useAuth();
@@ -16,6 +19,25 @@ console.log(user)
 useEffect(() => {
   handleGetMe();
 },[])
+
+useEffect(() => {
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
+
+  return () => {
+    lenis.destroy();
+  };
+}, []);
 
   const {token} = useSelector((state) => state.auth);
   return (
