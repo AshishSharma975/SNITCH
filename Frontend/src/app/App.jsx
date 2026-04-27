@@ -5,6 +5,8 @@ import {useSelector} from 'react-redux'
 import { useAuth } from '../features/auth/hook/useAuth';
 import { useEffect } from 'react';
 
+import { Toaster } from 'react-hot-toast';
+
 const App = () => {
 
   const {handleGetMe} = useAuth();
@@ -18,6 +20,7 @@ useEffect(() => {
   const {token} = useSelector((state) => state.auth);
   return (
     <div>
+      <Toaster position="top-center" reverseOrder={false} />
       <RouterProvider router={routes} />
     </div>
   )

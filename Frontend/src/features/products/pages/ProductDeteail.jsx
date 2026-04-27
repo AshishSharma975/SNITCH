@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useProduct } from '../hook/useproduct';
 import { ShoppingBag, Search, User, Menu, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Info, Check } from 'lucide-react';
+import { useCart } from '../../cart/hook/useCart';
+
 
 const ProductDeteail = () => {
   const { productId } = useParams();
   const { handleGetProductById } = useProduct();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const [selectedAttributes, setSelectedAttributes] = useState({});
 
@@ -342,10 +347,36 @@ const ProductDeteail = () => {
 
             {/* ACTION BUTTONS */}
             <div className="flex flex-col gap-4 mt-auto">
-              <button className="w-full bg-[#0a0a0a] text-white py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#222] active:scale-[0.99] shadow-lg shadow-[#0a0a0a]/10">
+              <button 
+              onClick={async () => {
+                if(!selectedVariant){
+                  toast.error("Please select all options");
+                  return;
+                }
+                if(quantity <= 0){
+                  toast.error("Please select a valid quantity");
+                  return;
+                } 
+                await addToCart(product._id, selectedVariant._id, quantity);
+                toast.success("Added to cart");
+              }}
+               className="w-full bg-[#0a0a0a] text-white py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#222] active:scale-[0.99] shadow-lg shadow-[#0a0a0a]/10">
                 ADD TO CART
               </button>
-              <button className="w-full border border-[#0a0a0a] text-[#0a0a0a] py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#0a0a0a] hover:text-white active:scale-[0.99]">
+              <button 
+              onClick={async () => {
+                if(!selectedVariant){
+                  toast.error("Please select all options");
+                  return;
+                }
+                if(quantity <= 0){
+                  toast.error("Please select a valid quantity");
+                  return;
+                }
+                await addToCart(product._id, selectedVariant._id, quantity);
+                navigate('/cart');
+              }}
+               className="w-full border border-[#0a0a0a] text-[#0a0a0a] py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#0a0a0a] hover:text-white active:scale-[0.99]">
                 BUY IT NOW
               </button>
             </div>
