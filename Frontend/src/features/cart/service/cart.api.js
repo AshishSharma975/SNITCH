@@ -18,10 +18,25 @@ export const cartAPI = {
     removeCart: (productId,variantId) => {
         return cartAPIinstance.delete(`remove/${productId}/${variantId}`);
     },
+    incrementQuantity: (productId,variantId) => {
+        return cartAPIinstance.patch(`quantity/increment/${productId}/${variantId}`);
+    }
 }
 
 export const getCart = async () => {
     const response = await cartAPI.getCart();
+    console.log(response.data)
+    return response.data;
+}
+
+export const incrementQuantity = async (productId,variantId) => {
+    const response = await cartAPI.incrementQuantity(productId,variantId);
+    console.log(response.data)
+    return response.data;
+}
+
+export const decrementQuantity = async (productId,variantId) => {
+    const response = await cartAPI.updateQuantity(productId,variantId,getCart().items.find(item => item.productId.toString() === productId && item.variantId.toString() === variantId).quantity - 1);
     console.log(response.data)
     return response.data;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useCart } from '../hook/useCart';
 import { useNavigate } from 'react-router-dom';
@@ -10,13 +10,19 @@ import { toast } from 'react-hot-toast';
 const CartPageFinal = () => {
   console.log("Cart component rendering...");
   const navigate = useNavigate();
-  const { handleGetCart, handleRemoveFromCart, handleUpdateQuantity } = useCart();
+  const { handleGetCart, handleRemoveFromCart, handleUpdateQuantity, handleIncrementQuantity, handleDecrementQuantity, handleRemoveItem, handleClearCart } = useCart();
 
   const cartItems = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const totalItems = useSelector((state) => state.cart.totalItems);
   const user = useSelector((state) => state.auth.user);
-  const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const allproduct = useSelector((state) => state.product.allproduct);
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { handleLogout } = useAuth();
 
 
@@ -92,7 +98,71 @@ const CartPageFinal = () => {
         </div>
 
         <div className="flex gap-8 items-center">
-          <Search size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" />
+          <div className="relative group">
+            <Search 
+              size={20} 
+              className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" 
+              onClick={() => setShowSearch(!showSearch)}
+            />
+            {showSearch && (
+              <div className="absolute right-0 mt-4 w-[300px] md:w-[400px] bg-white border border-[#ede9e3] shadow-2xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="p-4 border-b border-[#ede9e3] flex items-center gap-3 text-left">
+                  <Search size={16} className="text-[#999]" />
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="Search Archive..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-transparent outline-none text-[12px] tracking-[0.1em] font-medium uppercase text-[#0a0a0a]"
+                  />
+                  <button 
+                    onClick={() => {
+                      setShowSearch(false);
+                      setSearchQuery("");
+                    }}
+                    className="text-[10px] font-bold text-[#999] hover:text-[#0a0a0a]"
+                  >
+                    CLOSE
+                  </button>
+                </div>
+                
+                {searchQuery && (
+                  <div className="max-h-[400px] overflow-y-auto text-left">
+                    {allproduct?.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase())).length > 0 ? (
+                      allproduct
+                        ?.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                        .map((product) => (
+                          <div
+                            key={product._id}
+                            onClick={() => {
+                              navigate(`/product/details/${product._id}`);
+                              setShowSearch(false);
+                              setSearchQuery("");
+                            }}
+                            className="flex items-center gap-4 p-4 hover:bg-[#faf9f7] cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
+                          >
+                            <div className="w-12 h-16 bg-[#f2f1ef] rounded-sm overflow-hidden shrink-0">
+                              <img src={product.images?.[0]?.url} className="w-full h-full object-cover" alt="" />
+                            </div>
+                            <div>
+                              <p className="text-[11px] font-bold tracking-widest uppercase mb-1">{product.title}</p>
+                              <p className="text-[10px] text-[#999] tracking-widest uppercase">
+                                {product.price?.amount?.toLocaleString()} {product.price?.currency}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                      <div className="p-8 text-center text-[#999] text-[10px] tracking-widest uppercase italic">
+                        No pieces found
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           
           <div className="relative">
             <User 
@@ -225,17 +295,18 @@ const CartPageFinal = () => {
 
                     <div className="mt-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                       {/* Quantity Controls */}
+
                       <div className="flex items-center border border-[#ede9e3] rounded-full px-2 py-1 w-fit bg-white">
                         <button
+                          onClick={() => item.quantity > 1 ? onUpdateQty(product._id, item.variantId, item.quantity - 1) : onRemoveItem(product._id, item.variantId)}
                           className="p-2 hover:opacity-50 transition-opacity"
-                          onClick={() => onUpdateQty(product._id, item.variantId, item.quantity - 1)}
                         >
                           <Minus size={12} />
                         </button>
                         <span className="px-6 text-xs font-bold font-mono">{item.quantity}</span>
                         <button
+                          onClick={() => handleIncrementQuantity(product._id, item.variantId)}
                           className="p-2 hover:opacity-50 transition-opacity"
-                          onClick={() => onUpdateQty(product._id, item.variantId, item.quantity + 1)}
                         >
                           <Plus size={12} />
                         </button>

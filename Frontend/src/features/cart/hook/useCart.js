@@ -1,6 +1,6 @@
 import { cartAPI } from "../service/cart.api";
 import { useDispatch } from "react-redux";
-import { addToCart as addToCartAction, setCart } from "../state/cart.slice";
+import { addToCart as addToCartAction, setCart, incrementItemQuantity, decrementItemQuantity, removeItem, clearCart } from "../state/cart.slice";
 
 export const useCart = () => {
     const dispatch = useDispatch();
@@ -50,12 +50,52 @@ export const useCart = () => {
             console.log(err);
         }
     }
+
+    const handleIncrementQuantity = async (productId, variantId) => {
+        try {
+            const res = await cartAPI.incrementQuantity(productId, variantId);
+            dispatch(setCart(res.data.cart));
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleDecrementQuantity = async (productId, variantId) => {
+        try {
+            const res = await cartAPI.decrementQuantity(productId, variantId);
+            dispatch(decrementItemQuantity({productId,variantId}));
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleRemoveItem = async (productId, variantId) => {
+        try {
+            const res = await cartAPI.removeCart(productId, variantId);
+            dispatch(removeItem({productId,variantId}));
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleClearCart = async () => {
+        try {
+            const res = await cartAPI.clearCart();
+            dispatch(clearCart());
+        } catch (err) {
+            console.log(err);
+        }
+    }
     
     return {
         addToCart,
         getCart,
         handleGetCart,
         handleRemoveFromCart,
-        handleUpdateQuantity
+        handleUpdateQuantity,
+        handleIncrementQuantity,
+        handleDecrementQuantity,
+        handleRemoveItem,
+        handleClearCart
     }
 }

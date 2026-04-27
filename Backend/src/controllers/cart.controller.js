@@ -111,3 +111,25 @@ export const removeFromCart = async (req,res,next) => {
     const updatedCart = await CartModel.findOne({user:user._id}).populate('items.productId');
     res.status(200).json({message:"Item removed", cart: updatedCart});
 }
+
+export const incrementQuantity = async (req,res,next) => {
+    const {productId, variantId} = req.params;
+    const user = req.user;
+
+    const cart = await CartModel.findOne({user:user._id});
+    if(!cart) return res.status(404).json({message:"Cart not found"});
+
+    const item = cart.items.find(item => item.productId.toString() === productId && item.variantId.toString() === variantId);
+    if(!item) return res.status(404).json({message:"Item not found in cart"});
+     const stock = await stockOfVariant(productId,variantId)
+     if(item.quantity >= stock){
+         return res.status(400).json({
+             message:"Product is out of stock"
+         })
+     }
+    item.quantity = item.quantity + 1;
+    await cart.save();
+    
+    const updatedCart = await CartModel.findOne({user:user._id}).populate('items.productId');
+    res.status(200).json({message:"Quantity incremented", cart: updatedCart});
+}
