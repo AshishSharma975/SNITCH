@@ -3,7 +3,9 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useProduct } from '../hook/useproduct';
-import { ShoppingBag, Search, User, Menu, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Info, Check, Plus, Minus } from 'lucide-react';
+import { ShoppingBag, Search, User, Menu, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Info, Check, Plus, Minus, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { useAuth } from '../../auth/hook/useAuth';
+
 
 import { useCart } from '../../cart/hook/useCart';
 
@@ -19,6 +21,10 @@ const ProductDeteail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const { handleLogout } = useAuth();
+  const user = useSelector((state) => state.auth.user);
+
 
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const totalItems = useSelector((state) => state.cart?.totalItems || 0);
@@ -161,18 +167,64 @@ const ProductDeteail = () => {
 
         <div className="flex gap-8 items-center">
           <Search size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" />
-          <User size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" onClick={() => navigate('/login')} />
-          <div
-            className="relative cursor-pointer group"
-            onClick={() => navigate('/cart')}
-          >
-            <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
-                {totalItems}
-              </span>
+          
+          <div className="relative">
+            <User 
+              size={20} 
+              className="cursor-pointer hover:text-[#999] transition-colors" 
+              onClick={() => setShowUserMenu(!showUserMenu)} 
+            />
+            {showUserMenu && (
+              <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
+                {user ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setShowUserMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                  >
+                    <LogOut size={14} /> LOGOUT
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate("/login");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors border-b border-[#ede9e3]"
+                    >
+                      <LogIn size={14} /> LOGIN
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/register");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                    >
+                      <UserPlus size={14} /> SIGN UP
+                    </button>
+                  </>
+                )}
+              </div>
             )}
           </div>
+
+          {user && (
+            <div
+              className="relative cursor-pointer group"
+              onClick={() => navigate('/cart')}
+            >
+              <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                  {totalItems}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -381,6 +433,13 @@ const ProductDeteail = () => {
               <button
                 disabled={isAdding}
                 onClick={async () => {
+                  if (!user) {
+                    toast.error("Please login to curate your collection", {
+                      style: { borderRadius: '0px', background: '#0a0a0a', color: '#fff', fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase' }
+                    });
+                    navigate("/login");
+                    return;
+                  }
                   if (!selectedVariant) {
                     toast.error("Please select all options");
                     return;

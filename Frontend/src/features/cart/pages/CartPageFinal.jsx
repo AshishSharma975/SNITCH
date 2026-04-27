@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useCart } from '../hook/useCart';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowLeft, Search, User, Check } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowLeft, Search, User, Check, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { useAuth } from '../../auth/hook/useAuth';
+
 import { toast } from 'react-hot-toast';
 
 const CartPageFinal = () => {
@@ -13,6 +15,10 @@ const CartPageFinal = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const totalItems = useSelector((state) => state.cart.totalItems);
+  const user = useSelector((state) => state.auth.user);
+  const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const { handleLogout } = useAuth();
+
 
   useEffect(() => {
     handleGetCart();
@@ -64,7 +70,7 @@ const CartPageFinal = () => {
   return (
     <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav className="flex justify-between items-center px-6 md:px-12 py-8 bg-[#faf9f7]/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#ede9e3]">
+     <nav className="flex justify-between items-center px-6 md:px-12 py-8 bg-[#faf9f7]/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#ede9e3]">
         <div className="flex gap-10 items-center">
           <button onClick={() => navigate(-1)} className="hover:opacity-50 transition-opacity p-2 -ml-2">
             <ArrowLeft size={20} />
@@ -87,18 +93,64 @@ const CartPageFinal = () => {
 
         <div className="flex gap-8 items-center">
           <Search size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" />
-          <User size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" onClick={() => navigate('/login')} />
-          <div
-            className="relative cursor-pointer group"
-            onClick={() => navigate('/cart')}
-          >
-            <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
-                {totalItems}
-              </span>
+          
+          <div className="relative">
+            <User 
+              size={20} 
+              className="cursor-pointer hover:text-[#999] transition-colors" 
+              onClick={() => setShowUserMenu(!showUserMenu)} 
+            />
+            {showUserMenu && (
+              <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
+                {user ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setShowUserMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                  >
+                    <LogOut size={14} /> LOGOUT
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate("/login");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors border-b border-[#ede9e3]"
+                    >
+                      <LogIn size={14} /> LOGIN
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/register");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                    >
+                      <UserPlus size={14} /> SIGN UP
+                    </button>
+                  </>
+                )}
+              </div>
             )}
           </div>
+
+          {user && (
+            <div
+              className="relative cursor-pointer group"
+              onClick={() => navigate('/cart')}
+            >
+              <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                  {totalItems}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </nav>
 
