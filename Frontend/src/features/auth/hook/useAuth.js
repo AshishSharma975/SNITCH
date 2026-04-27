@@ -1,6 +1,7 @@
 import { setUser, setLoading, setError } from "../state/auth.slice";
 import { register, login,getMe } from "../service/auth.api";
 import { useDispatch } from "react-redux";
+import { clearCart } from "../../cart/state/cart.slice";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ export const useAuth = () => {
 
   async function handleLogout() {
     dispatch(setUser(null));
-    // Optionally: call an API to clear the backend cookie if not using HTTP-only cookies that clear on session or having a logout route. (Assuming logout route or just clearing state)
+    dispatch(clearCart());
     return true;
   }
 
