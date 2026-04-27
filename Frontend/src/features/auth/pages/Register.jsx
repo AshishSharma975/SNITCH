@@ -241,11 +241,10 @@ const Register = () => {
                 className="sr-only"
               />
               <div
-                className={`w-[18px] h-[18px] rounded-md border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-                  formData.isSeller
+                className={`w-[18px] h-[18px] rounded-md border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${formData.isSeller
                     ? "bg-[#0a0a0a] border-[#0a0a0a]"
                     : "bg-white border-[#d5d2cd] group-hover:border-[#999]"
-                }`}
+                  }`}
               >
                 {formData.isSeller && (
                   <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />

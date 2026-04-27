@@ -28,15 +28,15 @@ const Login = () => {
     try {
       setLoading(true);
       setError("");
-     const user = await handleLogin({
+      const user = await handleLogin({
         email: formData.email.trim(),
         password: formData.password,
       });
-      if(user.role === "buyer"){
+      if (user.role === "buyer") {
         navigate("/");
-      }else if(user.role === "seller"){
+      } else if (user.role === "seller") {
         navigate("/seller/dashboard");
-      }else{
+      } else {
         navigate("/");
       }
     } catch (err) {

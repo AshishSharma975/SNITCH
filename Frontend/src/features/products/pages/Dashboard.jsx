@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useProduct } from "../hook/useproduct";
 import { useSelector } from "react-redux";
-import { 
-  Plus, 
-  LayoutDashboard, 
-  Package, 
-  TrendingUp, 
-  Settings, 
-  LogOut, 
+import {
+  Plus,
+  LayoutDashboard,
+  Package,
+  TrendingUp,
+  Settings,
+  LogOut,
   ExternalLink,
   ChevronRight,
   MoreVertical,
@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/hook/useAuth";
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const { handleLogout } = useAuth();

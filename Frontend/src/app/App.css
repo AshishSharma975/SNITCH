@@ -1,7 +1,5 @@
 @import "tailwindcss";
-* {
-  font-family: "DM Sans", sans-serif;
-}
+
 
 html.lenis,
 html.lenis body {

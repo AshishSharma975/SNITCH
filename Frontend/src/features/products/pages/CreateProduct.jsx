@@ -72,8 +72,8 @@ const CreateProduct = () => {
     } catch (err) {
       setError(
         err?.response?.data?.message ||
-          err?.response?.data?.errors?.[0]?.msg ||
-          "Failed to create product."
+        err?.response?.data?.errors?.[0]?.msg ||
+        "Failed to create product."
       );
     } finally {
       setLoading(false);

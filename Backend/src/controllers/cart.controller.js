@@ -68,7 +68,7 @@ export const getCart = async (req,res,next) => {
     const user = req.user;
     const cart = await CartModel.findOne({
         user:user._id
-    });
+    }).populate('items.productId');
     if(!cart){
         return res.status(404).json({
             message:"Cart not found"
@@ -78,4 +78,36 @@ export const getCart = async (req,res,next) => {
         message:"Cart fetched successfully",
         cart
     });
+}
+
+export const updateQuantity = async (req,res,next) => {
+    const {productId, variantId} = req.params;
+    const {quantity} = req.body;
+    const user = req.user;
+
+    const cart = await CartModel.findOne({user:user._id});
+    if(!cart) return res.status(404).json({message:"Cart not found"});
+
+    const item = cart.items.find(item => item.productId.toString() === productId && item.variantId.toString() === variantId);
+    if(!item) return res.status(404).json({message:"Item not found in cart"});
+
+    item.quantity = quantity;
+    await cart.save();
+    
+    const updatedCart = await CartModel.findOne({user:user._id}).populate('items.productId');
+    res.status(200).json({message:"Quantity updated", cart: updatedCart});
+}
+
+export const removeFromCart = async (req,res,next) => {
+    const {productId, variantId} = req.params;
+    const user = req.user;
+
+    const cart = await CartModel.findOne({user:user._id});
+    if(!cart) return res.status(404).json({message:"Cart not found"});
+
+    cart.items = cart.items.filter(item => item.productId.toString() !== productId || item.variantId.toString() !== variantId);
+    await cart.save();
+
+    const updatedCart = await CartModel.findOne({user:user._id}).populate('items.productId');
+    res.status(200).json({message:"Item removed", cart: updatedCart});
 }

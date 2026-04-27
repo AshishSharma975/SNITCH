@@ -19,3 +19,9 @@ export const cartAPI = {
         return cartAPIinstance.delete(`remove/${productId}/${variantId}`);
     },
 }
+
+export const getCart = async () => {
+    const response = await cartAPI.getCart();
+    console.log(response.data)
+    return response.data;
+}

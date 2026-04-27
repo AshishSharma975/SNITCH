@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useProduct } from '../hook/useproduct';
-import { ShoppingBag, Search, User, Menu, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Info, Check } from 'lucide-react';
+import { ShoppingBag, Search, User, Menu, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Info, Check, Plus, Minus } from 'lucide-react';
+
 import { useCart } from '../../cart/hook/useCart';
 
 
@@ -15,22 +17,25 @@ const ProductDeteail = () => {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const [selectedAttributes, setSelectedAttributes] = useState({});
+  const totalItems = useSelector((state) => state.cart?.totalItems || 0);
 
   const fetchProductData = async () => {
     try {
       setLoading(true);
       const data = await handleGetProductById(productId);
       setProduct(data);
-      
+
       // Initialize default attributes if variants exist
       if (data.variants && data.variants.length > 0) {
         const firstVariant = data.variants[0];
         // Handle different attribute structures
         let attrs = firstVariant.attributes || {};
         if (Array.isArray(attrs)) attrs = attrs[0] || {};
-        
+
         const initialAttrs = {};
         Object.entries(attrs).forEach(([key, val]) => {
           if (!key.startsWith('_')) initialAttrs[key] = val;
@@ -78,13 +83,13 @@ const ProductDeteail = () => {
   };
 
   const selectedVariant = getSelectedVariant();
-  
+
   // Display Data with Fallback Logic
   const getDisplayData = () => {
     const displayPrice = selectedVariant?.price?.amount || product?.price?.amount || 0;
     const displayCurrency = selectedVariant?.price?.currency || product?.price?.currency || 'INR';
-    const displayImages = (selectedVariant?.images && selectedVariant.images.length > 0) 
-      ? selectedVariant.images 
+    const displayImages = (selectedVariant?.images && selectedVariant.images.length > 0)
+      ? selectedVariant.images
       : (product?.images || []);
     const displayStock = selectedVariant ? selectedVariant.stock : (product?.variants?.reduce((acc, v) => acc + (v.stock || 0), 0) || 0);
 
@@ -118,7 +123,7 @@ const ProductDeteail = () => {
       <div className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center p-6 text-center">
         <h2 className="font-serif text-3xl mb-4 text-[#0a0a0a]">Product Not Found</h2>
         <p className="text-[#999] mb-8 font-sans">The piece you're looking for might have been moved or is no longer available.</p>
-        <button 
+        <button
           onClick={() => navigate('/')}
           className="bg-[#0a0a0a] text-white px-8 py-3 rounded-full text-xs tracking-[0.2em] font-medium transition-all hover:bg-[#222]"
         >
@@ -133,33 +138,40 @@ const ProductDeteail = () => {
   return (
     <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav className="flex justify-between items-center px-6 md:px-12 py-6 sticky top-0 bg-[#faf9f7]/80 backdrop-blur-md z-50 border-b border-[#ede9e3]">
-        <div className="flex gap-8 items-center">
-          <button onClick={() => navigate(-1)} className="hover:text-[#999] transition-colors p-2 -ml-2">
+      <nav className="flex justify-between items-center px-6 md:px-12 py-8 sticky top-0 bg-[#faf9f7]/80 backdrop-blur-md z-50 border-b border-[#ede9e3]">
+        <div className="flex gap-10 items-center">
+          <button onClick={() => navigate(-1)} className="hover:opacity-50 transition-opacity p-2 -ml-2">
             <ArrowLeft size={20} />
           </button>
           <div className="hidden lg:flex gap-8">
             {['NEW IN', 'COLLECTIONS', 'CURATION'].map((item) => (
-              <span key={item} className="text-[10px] tracking-[0.25em] font-medium cursor-pointer hover:text-[#999] transition-colors">
+              <span key={item} className="text-[11px] tracking-[0.25em] font-bold cursor-pointer hover:text-[#999] transition-colors">
                 {item}
               </span>
             ))}
           </div>
         </div>
 
-        <div 
+        <div
           onClick={() => navigate('/')}
-          className="font-serif text-2xl md:text-3xl tracking-[0.15em] cursor-pointer absolute left-1/2 -translate-x-1/2"
+          className="font-serif text-3xl md:text-4xl tracking-[0.15em] cursor-pointer absolute left-1/2 -translate-x-1/2"
         >
           SNITCH
         </div>
 
-        <div className="flex gap-6 items-center">
-          <Search size={18} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" />
-          <User size={18} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" onClick={() => navigate('/login')} />
-          <div className="relative cursor-pointer group">
-            <ShoppingBag size={18} className="group-hover:text-[#999] transition-colors" />
-            <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+        <div className="flex gap-8 items-center">
+          <Search size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" />
+          <User size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" onClick={() => navigate('/login')} />
+          <div
+            className="relative cursor-pointer group"
+            onClick={() => navigate('/cart')}
+          >
+            <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                {totalItems}
+              </span>
+            )}
           </div>
         </div>
       </nav>
@@ -167,13 +179,13 @@ const ProductDeteail = () => {
       {/* ── Main Content ── */}
       <main className="max-w-[1300px] mx-auto px-4 md:px-12 py-8 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          
+
           {/* ── Left: Image Gallery ── */}
           <div className="lg:col-span-6 xl:col-span-6 flex flex-col md:flex-row gap-4 md:gap-6 lg:max-w-[600px]">
             {/* Thumbnails (Desktop) */}
             <div className="hidden md:flex flex-col gap-3 w-20 shrink-0">
               {displayImages.map((img, idx) => (
-                <div 
+                <div
                   key={idx}
                   onClick={() => setActiveImage(idx)}
                   className={`aspect-[3/4] cursor-pointer overflow-hidden transition-all duration-300 rounded-sm ${activeImage === idx ? 'ring-1 ring-[#0a0a0a] ring-offset-2' : 'opacity-40 hover:opacity-100'}`}
@@ -188,20 +200,20 @@ const ProductDeteail = () => {
 
               {displayImages.length > 0 ? (
                 <>
-                  <img 
-                    src={displayImages[activeImage]?.url} 
-                    alt={product.title} 
+                  <img
+                    src={displayImages[activeImage]?.url}
+                    alt={product.title}
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  
+
                   {/* Desktop Swipe Buttons */}
-                  <button 
+                  <button
                     onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
                     className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-[#ede9e3]"
                   >
                     <ChevronLeft size={20} />
                   </button>
-                  <button 
+                  <button
                     onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
                     className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-[#ede9e3]"
                   >
@@ -214,32 +226,32 @@ const ProductDeteail = () => {
                   <span className="text-[10px] tracking-[0.3em] uppercase">Imagery Pending</span>
                 </div>
               )}
-              
+
               {/* Mobile Interaction Layer */}
               <div className="absolute inset-x-0 bottom-6 px-6 flex items-center justify-between md:hidden">
-                 <button 
-                    onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
-                    className="bg-white/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                  className="bg-white/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
+                >
+                  <ChevronLeft size={18} />
+                </button>
 
-                  <div className="flex gap-2.5">
-                    {displayImages.map((_, idx) => (
-                      <button 
-                        key={idx}
-                        onClick={() => setActiveImage(idx)}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === idx ? 'bg-[#0a0a0a] w-6' : 'bg-[#0a0a0a]/20 w-1.5'}`}
-                      />
-                    ))}
-                  </div>
+                <div className="flex gap-2.5">
+                  {displayImages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveImage(idx)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === idx ? 'bg-[#0a0a0a] w-6' : 'bg-[#0a0a0a]/20 w-1.5'}`}
+                    />
+                  ))}
+                </div>
 
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
-                    className="bg-white/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
-                  >
-                    <ChevronRight size={18} />
-                  </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                  className="bg-white/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
+                >
+                  <ChevronRight size={18} />
+                </button>
               </div>
             </div>
           </div>
@@ -304,11 +316,10 @@ const ProductDeteail = () => {
                       <button
                         key={val}
                         onClick={() => setSelectedAttributes(prev => ({ ...prev, [groupName]: val }))}
-                        className={`px-6 py-3 text-[11px] font-bold tracking-widest uppercase transition-all border rounded-sm ${
-                          selectedAttributes[groupName] === val
-                            ? 'bg-[#0a0a0a] text-white border-[#0a0a0a]'
-                            : 'bg-white text-[#0a0a0a] border-[#ede9e3] hover:border-[#0a0a0a]'
-                        }`}
+                        className={`px-6 py-3 text-[11px] font-bold tracking-widest uppercase transition-all border rounded-sm ${selectedAttributes[groupName] === val
+                          ? 'bg-[#0a0a0a] text-white border-[#0a0a0a]'
+                          : 'bg-white text-[#0a0a0a] border-[#ede9e3] hover:border-[#0a0a0a]'
+                          }`}
                       >
                         {val}
                       </button>
@@ -345,40 +356,96 @@ const ProductDeteail = () => {
               ))}
             </div>
 
+            {/* QUANTITY SELECTOR */}
+            <div className="flex flex-col gap-4 mb-10">
+              <span className="text-[10px] tracking-[0.25em] text-[#999] uppercase font-bold">Quantity</span>
+              <div className="flex items-center w-fit border border-[#ede9e3] rounded-full px-2 py-1 bg-white">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="p-3 hover:opacity-50 transition-opacity"
+                >
+                  <Minus size={14} />
+                </button>
+                <span className="px-8 text-sm font-bold font-mono w-16 text-center">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="p-3 hover:opacity-50 transition-opacity"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+            </div>
+
             {/* ACTION BUTTONS */}
-            <div className="flex flex-col gap-4 mt-auto">
-              <button 
-              onClick={async () => {
-                if(!selectedVariant){
-                  toast.error("Please select all options");
-                  return;
-                }
-                if(quantity <= 0){
-                  toast.error("Please select a valid quantity");
-                  return;
-                } 
-                await addToCart(product._id, selectedVariant._id, quantity);
-                toast.success("Added to cart");
-              }}
-               className="w-full bg-[#0a0a0a] text-white py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#222] active:scale-[0.99] shadow-lg shadow-[#0a0a0a]/10">
-                ADD TO CART
+            <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+              <button
+                disabled={isAdding}
+                onClick={async () => {
+                  if (!selectedVariant) {
+                    toast.error("Please select all options");
+                    return;
+                  }
+                  setIsAdding(true);
+                  try {
+                    await addToCart(product._id, selectedVariant._id, quantity);
+                    toast.success("Added to selection", {
+                      icon: '✦',
+                      duration: 3000,
+                      style: {
+                        background: '#0a0a0a',
+                        color: '#fff',
+                        padding: '16px 24px',
+                        borderRadius: '0px',
+                        fontSize: '10px',
+                        letterSpacing: '0.25em',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+                        minWidth: '280px',
+                        fontFamily: 'Inter, sans-serif'
+                      },
+                    });
+                  } finally {
+                    setIsAdding(false);
+                  }
+                }}
+                className={`flex-1 bg-[#0a0a0a] text-white py-5 rounded-full text-[11px] tracking-[0.3em] font-bold transition-all flex items-center justify-center gap-3 shadow-xl shadow-[#0a0a0a]/10 ${isAdding ? 'opacity-70 scale-[0.98]' : 'hover:bg-[#222] active:scale-[0.98]'}`}>
+                {isAdding ? (
+                  <>
+                    <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    CURATING...
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag size={16} />
+                    ADD TO CART
+                  </>
+                )}
               </button>
-              <button 
-              onClick={async () => {
-                if(!selectedVariant){
-                  toast.error("Please select all options");
-                  return;
-                }
-                if(quantity <= 0){
-                  toast.error("Please select a valid quantity");
-                  return;
-                }
-                await addToCart(product._id, selectedVariant._id, quantity);
-                navigate('/cart');
-              }}
-               className="w-full border border-[#0a0a0a] text-[#0a0a0a] py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#0a0a0a] hover:text-white active:scale-[0.99]">
-                BUY IT NOW
+
+              <button
+                onClick={() => setIsWishlisted(!isWishlisted)}
+                className={`p-5 rounded-full border border-[#ede9e3] transition-all hover:border-[#0a0a0a] ${isWishlisted ? 'bg-[#0a0a0a] border-[#0a0a0a] text-white' : 'bg-white text-[#0a0a0a]'}`}
+              >
+                <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
               </button>
+            </div>
+
+            {/* Additional UX: Size Guide & Delivery Info */}
+            <div className="mt-12 space-y-4">
+              <div className="flex items-center gap-4 text-[#999] group cursor-pointer hover:text-[#0a0a0a] transition-colors">
+                <div className="w-10 h-10 rounded-full border border-[#ede9e3] flex items-center justify-center group-hover:border-[#0a0a0a] transition-all">
+                  <Info size={14} />
+                </div>
+                <span className="text-[10px] tracking-[0.2em] font-bold uppercase">Size & Fit Guide</span>
+              </div>
+              <div className="flex items-center gap-4 text-[#999] group cursor-pointer hover:text-[#0a0a0a] transition-colors">
+                <div className="w-10 h-10 rounded-full border border-[#ede9e3] flex items-center justify-center group-hover:border-[#0a0a0a] transition-all">
+                  <Truck size={14} />
+                </div>
+                <span className="text-[10px] tracking-[0.2em] font-bold uppercase">Express Delivery Available</span>
+              </div>
             </div>
 
             <p className="text-[9px] text-center text-[#999] mt-8 tracking-[0.2em] uppercase font-medium">
@@ -388,39 +455,20 @@ const ProductDeteail = () => {
         </div>
       </main>
 
-      {/* ── Footer Branding Section ── */}
-      <section className="bg-white px-6 md:px-12 py-24 mt-12 border-t border-[#ede9e3]">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 items-center text-center">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 rounded-full border border-[#ede9e3] flex items-center justify-center mb-6">
-                <Truck size={18} strokeWidth={1} />
-              </div>
-              <h4 className="text-[#0a0a0a] font-bold tracking-[0.2em] text-[10px] uppercase mb-4">Fast Logistics</h4>
-              <p className="text-xs text-[#888] leading-relaxed max-w-[200px]">Express shipping to over 50 countries worldwide.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 rounded-full border border-[#ede9e3] flex items-center justify-center mb-6">
-                <RotateCcw size={18} strokeWidth={1} />
-              </div>
-              <h4 className="text-[#0a0a0a] font-bold tracking-[0.2em] text-[10px] uppercase mb-4">Easy Returns</h4>
-              <p className="text-xs text-[#888] leading-relaxed max-w-[200px]">30-day hassle-free return policy for all archive pieces.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 rounded-full border border-[#ede9e3] flex items-center justify-center mb-6">
-                <ShieldCheck size={18} strokeWidth={1} />
-              </div>
-              <h4 className="text-[#0a0a0a] font-bold tracking-[0.2em] text-[10px] uppercase mb-4">Secure Payment</h4>
-              <p className="text-xs text-[#888] leading-relaxed max-w-[200px]">Safe and encrypted transaction processing.</p>
-            </div>
-          </div>
-          
-          <div className="mt-24 pt-12 border-t border-[#f2f1ef] text-center">
-            <h2 className="font-serif text-4xl mb-4 italic tracking-wide">Snitch Studios.</h2>
-            <p className="text-[10px] tracking-[0.5em] text-[#bbb] uppercase">Obsidian Muse Archive</p>
-          </div>
+      {/* ── Footer ── */}
+      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white mt-24">
+        <h2 className="font-serif text-3xl mb-12 tracking-[0.2em] font-light">SNITCH</h2>
+        <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 mb-12">
+          {["PRIVACY", "TERMS", "STUDIO", "JOURNAL"].map((link) => (
+            <span key={link} className="text-[10px] tracking-[0.3em] font-bold text-[#999] cursor-pointer hover:text-[#0a0a0a] transition-colors">
+              {link}
+            </span>
+          ))}
         </div>
-      </section>
+        <p className="text-[10px] text-[#ccc] tracking-[0.1em] font-medium">
+          © 2026 SNITCH STUDIOS. ALL RIGHTS RESERVED.
+        </p>
+      </footer>
     </div>
   );
 };

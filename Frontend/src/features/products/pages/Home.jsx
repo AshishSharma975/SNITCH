@@ -3,66 +3,28 @@ import { useSelector } from "react-redux";
 import { useProduct } from "../hook/useproduct";
 import { ShoppingBag, Search, User, Menu, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 const Home = () => {
   const navigate = useNavigate();
   const allproduct = useSelector((state) => state.product.allproduct);
+  const totalItems = useSelector((state) => state.cart.totalItems);
   const { handleGetAllProduct } = useProduct();
 
   useEffect(() => {
     handleGetAllProduct();
   }, []);
 
-  // ── Styling Tokens (Consistent with Dashboard) ──
-  const colors = {
-    bg: "#faf9f7",
-    card: "#ffffff",
-    border: "#ede9e3",
-    textMain: "#0a0a0a",
-    textMuted: "#999999",
-    accent: "#0a0a0a",
-  };
-
-  const fonts = {
-    serif: "'Cormorant Garamond', serif",
-    sans: "'DM Sans', sans-serif",
-  };
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: colors.bg,
-        fontFamily: fonts.sans,
-        color: colors.textMain,
-      }}
-    >
+    <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "30px 60px",
-          position: "sticky",
-          top: 0,
-          backgroundColor: "rgba(250, 249, 247, 0.8)",
-          backdropFilter: "blur(10px)",
-          zIndex: 1000,
-          borderBottom: `1px solid ${colors.border}`,
-        }}
-      >
-        <div style={{ display: "flex", gap: "40px", alignItems: "center" }}>
-          <Menu size={20} style={{ cursor: "pointer" }} />
-          <div style={{ display: "flex", gap: "24px" }}>
+      <nav className="flex justify-between items-center px-6 md:px-12 py-8 sticky top-0 bg-[#faf9f7]/80 backdrop-blur-md z-50 border-b border-[#ede9e3]">
+        <div className="flex gap-10 items-center">
+          <Menu size={20} className="cursor-pointer hover:opacity-50 transition-opacity" />
+          <div className="hidden lg:flex gap-8">
             {["NEW IN", "COLLECTIONS", "CURATION"].map((item) => (
               <span
                 key={item}
-                style={{
-                  fontSize: "11px",
-                  letterSpacing: "0.2em",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                }}
+                className="text-[11px] tracking-[0.25em] font-bold cursor-pointer hover:text-[#999] transition-colors"
               >
                 {item}
               </span>
@@ -72,203 +34,93 @@ const Home = () => {
 
         <div
           onClick={() => navigate("/")}
-          style={{
-            fontFamily: fonts.serif,
-            fontSize: "32px",
-            fontWeight: 400,
-            cursor: "pointer",
-            letterSpacing: "0.1em",
-          }}
+          className="font-serif text-3xl md:text-4xl tracking-[0.15em] cursor-pointer absolute left-1/2 -translate-x-1/2"
         >
           SNITCH
         </div>
 
-        <div style={{ display: "flex", gap: "30px", alignItems: "center" }}>
-          <Search size={20} style={{ cursor: "pointer" }} />
-          <User size={20} style={{ cursor: "pointer" }} onClick={() => navigate("/login")} />
-          <div style={{ position: "relative", cursor: "pointer" }}>
-            <ShoppingBag size={20} />
-            <span
-              style={{
-                position: "absolute",
-                top: "-8px",
-                right: "-8px",
-                backgroundColor: colors.accent,
-                color: "#fff",
-                fontSize: "10px",
-                width: "16px",
-                height: "16px",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              0
-            </span>
+        <div className="flex gap-8 items-center">
+          <Search size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" />
+          <User size={20} className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" onClick={() => navigate("/login")} />
+          <div
+            className="relative cursor-pointer group"
+            onClick={() => navigate("/cart")}
+          >
+            <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                {totalItems}
+              </span>
+            )}
           </div>
         </div>
       </nav>
 
       {/* ── Hero Section ── */}
-      <header style={{ padding: "80px 60px 120px 60px", textAlign: "center" }}>
-        <p
-          style={{
-            fontSize: "12px",
-            letterSpacing: "0.5em",
-            textTransform: "uppercase",
-            color: colors.textMuted,
-            marginBottom: "24px",
-          }}
-        >
+      <header className="px-6 py-20 md:py-32 text-center max-w-[1200px] mx-auto">
+        <p className="text-[11px] tracking-[0.5em] text-[#999] uppercase mb-8 font-bold">
           Curated Apparel for the Modern Minimalist
         </p>
-        <h1
-          style={{
-            fontFamily: fonts.serif,
-            fontSize: "clamp(48px, 8vw, 120px)",
-            fontWeight: 300,
-            lineHeight: 0.9,
-            marginBottom: "40px",
-            letterSpacing: "-0.03em",
-          }}
-        >
-          The <em>Art</em> of <br />
-          Obsidian <em>Muse.</em>
+        <h1 className="font-serif text-[clamp(48px,8vw,120px)] font-light leading-[0.95] mb-12 tracking-tighter">
+          The <span className="italic">Art</span> of <br />
+          Obsidian <span className="italic">Muse.</span>
         </h1>
-        <button
-          style={{
-            background: colors.accent,
-            color: "#fff",
-            border: "none",
-            padding: "20px 40px",
-            borderRadius: "50px",
-            fontSize: "12px",
-            letterSpacing: "0.2em",
-            fontWeight: 500,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
+        <button className="bg-[#0a0a0a] text-white px-10 py-5 rounded-full text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-[#222] active:scale-[0.98] inline-flex items-center gap-4 shadow-2xl shadow-[#0a0a0a]/20">
           DISCOVER COLLECTION <ArrowRight size={16} />
         </button>
       </header>
 
       {/* ── Product Grid ── */}
-      <main style={{ padding: "0 60px 100px 60px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginBottom: "60px",
-            borderBottom: `1px solid ${colors.border}`,
-            paddingBottom: "24px",
-          }}
-        >
-          <h2 style={{ fontFamily: fonts.serif, fontSize: "42px", fontWeight: 300 }}>
-            Recent <em>Drops.</em>
+      <main className="px-6 md:px-12 pb-32">
+        <div className="flex justify-between items-end mb-16 border-b border-[#ede9e3] pb-8">
+          <h2 className="font-serif text-4xl md:text-5xl font-light">
+            Recent <span className="italic">Drops.</span>
           </h2>
-          <span style={{ fontSize: "12px", color: colors.textMuted, letterSpacing: "0.1em" }}>
-            {allproduct?.length || 0} PIECES IN ARCHIVE
+          <span className="text-[11px] text-[#999] tracking-[0.2em] font-bold uppercase">
+            {allproduct?.length || 0} Pieces in Archive
           </span>
         </div>
 
         {!allproduct || allproduct.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "100px 0", color: colors.textMuted }}>
+          <div className="text-center py-32 text-[#999] font-light italic">
             The archive is currently empty.
           </div>
         ) : (
-          <div
-          
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: "60px 40px",
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
             {allproduct.map((product) => (
               <div
-                onClick={() => navigate(`/product/${product._id}`)}
+                onClick={() => navigate(`/product/details/${product._id}`)}
                 key={product._id}
-                style={{
-                  cursor: "pointer",
-                  transition: "transform 0.3s ease",
-                }}
+                className="group cursor-pointer"
               >
-                <div
-                  style={{
-                    aspectRatio: "3/4",
-                    backgroundColor: "#efeeea",
-                    borderRadius: "2px",
-                    overflow: "hidden",
-                    marginBottom: "24px",
-                    position: "relative",
-                  }}
-                >
+                <div className="aspect-[3/4] bg-[#f2f1ef] overflow-hidden rounded-sm relative mb-6">
                   {product.images && product.images.length > 0 ? (
                     <img
                       src={product.images[0].url}
                       alt={product.title}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        transition: "transform 0.6s cubic-bezier(0.2, 1, 0.3, 1)",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                     />
                   ) : (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "10px",
-                        letterSpacing: "0.2em",
-                        color: "#ccc",
-                      }}
-                    >
-                      PENDING IMAGERY
+                    <div className="w-full h-full flex items-center justify-center text-[10px] tracking-[0.3em] text-[#ccc] uppercase">
+                      Pending Imagery
                     </div>
                   )}
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: "20px",
-                      left: "20px",
-                      backgroundColor: "rgba(255,255,255,0.9)",
-                      padding: "8px 16px",
-                      fontSize: "10px",
-                      fontWeight: 500,
-                      letterSpacing: "0.1em",
-                    }}
-                  >
-                    QUICK VIEW
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 flex items-center justify-center">
+                    <div className="bg-white px-6 py-3 text-[9px] tracking-[0.2em] font-bold uppercase opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl">
+                      View Details
+                    </div>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div>
-                    <h3
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: 400,
-                        marginBottom: "6px",
-                        letterSpacing: "0.02em",
-                      }}
-                    >
+                <div className="flex justify-between items-start gap-4">
+                  <div className="flex-1">
+                    <h3 className="text-[14px] font-medium mb-1 tracking-wide uppercase leading-tight group-hover:opacity-60 transition-opacity">
                       {product.title}
                     </h3>
-                    <p style={{ fontSize: "12px", color: colors.textMuted }}>Essential Studio Piece</p>
+                    <p className="text-[11px] text-[#999] font-bold tracking-[0.1em] uppercase">Studio Archive Piece</p>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "15px", fontWeight: 500 }}>
+                  <div className="text-right shrink-0">
+                    <span className="text-[15px] font-medium tracking-tight">
                       {product.price?.amount?.toLocaleString()} {product.price?.currency}
                     </span>
                   </div>
@@ -280,32 +132,16 @@ const Home = () => {
       </main>
 
       {/* ── Footer ── */}
-      <footer
-        style={{
-          borderTop: `1px solid ${colors.border}`,
-          padding: "80px 60px",
-          textAlign: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: fonts.serif,
-            fontSize: "24px",
-            marginBottom: "30px",
-            letterSpacing: "0.1em",
-          }}
-        >
-          SNITCH
-        </h2>
-        <div style={{ display: "flex", justifyContent: "center", gap: "40px", marginBottom: "40px" }}>
+      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white">
+        <h2 className="font-serif text-3xl mb-12 tracking-[0.2em] font-light">SNITCH</h2>
+        <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 mb-12">
           {["PRIVACY", "TERMS", "STUDIO", "JOURNAL"].map((link) => (
-            <span key={link} style={{ fontSize: "10px", letterSpacing: "0.2em", color: colors.textMuted }}>
+            <span key={link} className="text-[10px] tracking-[0.3em] font-bold text-[#999] cursor-pointer hover:text-[#0a0a0a] transition-colors">
               {link}
             </span>
           ))}
         </div>
-        <p style={{ fontSize: "11px", color: "#ccc", letterSpacing: "0.05em" }}>
+        <p className="text-[10px] text-[#ccc] tracking-[0.1em] font-medium">
           © 2026 SNITCH STUDIOS. ALL RIGHTS RESERVED.
         </p>
       </footer>
