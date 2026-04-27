@@ -388,24 +388,20 @@ const ProductDeteail = () => {
                   setIsAdding(true);
                   try {
                     await addToCart(product._id, selectedVariant._id, quantity);
-                    toast.success("Added to selection", {
-                      icon: '✦',
-                      duration: 3000,
-                      style: {
-                        background: '#0a0a0a',
-                        color: '#fff',
-                        padding: '16px 24px',
-                        borderRadius: '0px',
-                        fontSize: '10px',
-                        letterSpacing: '0.25em',
-                        fontWeight: '700',
-                        textTransform: 'uppercase',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-                        minWidth: '280px',
-                        fontFamily: 'Inter, sans-serif'
-                      },
-                    });
+                    toast.custom((t) => (
+                      <div
+                        className={`${
+                          t.visible ? 'animate-slide-down' : 'opacity-0 scale-95'
+                        } glass-toast flex items-center gap-4 px-6 py-4 rounded-full shadow-2xl transition-all duration-500 ease-in-out`}
+                      >
+                        <div className="w-8 h-8 rounded-full bg-[#22c55e] flex items-center justify-center animate-rotate-in">
+                          <Check size={16} className="text-white" />
+                        </div>
+                        <span className="text-[10px] tracking-[0.25em] font-bold uppercase text-[#0a0a0a] whitespace-nowrap">
+                          Added to selection
+                        </span>
+                      </div>
+                    ), { duration: 3000, position: 'top-center' });
                   } finally {
                     setIsAdding(false);
                   }
