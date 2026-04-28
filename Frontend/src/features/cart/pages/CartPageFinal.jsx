@@ -165,11 +165,17 @@ const CartPageFinal = () => {
           </div>
           
           <div className="relative">
-            <User 
-              size={20} 
-              className="cursor-pointer hover:text-[#999] transition-colors" 
-              onClick={() => setShowUserMenu(!showUserMenu)} 
-            />
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowUserMenu(!showUserMenu)}>
+              {user && (
+                <span className="text-[11px] tracking-[0.1em] font-bold uppercase hidden sm:block hover:text-[#999] transition-colors">
+                  {user.fullname}
+                </span>
+              )}
+              <User 
+                size={20} 
+                className="hover:text-[#999] transition-colors" 
+              />
+            </div>
             {showUserMenu && (
               <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                 {user ? (
