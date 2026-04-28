@@ -238,6 +238,8 @@ const CartPageFinal = () => {
               const product = item.productId;
               const variant = product?.variants?.find(v => v._id === item.variantId);
               const displayImage = variant?.images?.[0]?.url || product?.images?.[0]?.url;
+              const varianstPrice = variant?.salePrice?.amount ? variant.salePrice : variant?.price;
+              const displayPrice = product?.price;
 
               return (
                 <div key={item._id} className="group flex flex-col sm:flex-row gap-8 pb-12 border-b border-[#0a0a0a]/5 last:border-0">
@@ -267,6 +269,22 @@ const CartPageFinal = () => {
                           {product?.title}
                         </h3>
                       </div>
+                      {displayPrice?.amount != null && varianstPrice?.amount != null && displayPrice.amount !== varianstPrice.amount && (
+                        displayPrice.amount > varianstPrice.amount ? (
+                          <>
+                            <span className="text-xs font-bold text-red-600">Sale</span>
+                            <div className="flex flex-col">
+                              <span className="text-[10px] tracking-widest text-gray-500 line-through">{formatCurrency(displayPrice.amount)}</span>
+                              <span className="text-[10px] tracking-widest text-black">{formatCurrency(varianstPrice.amount)}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold text-black">{formatCurrency(displayPrice.amount)}</span>
+                            <span className="text-[10px] tracking-widest text-black">{formatCurrency(varianstPrice.amount)}</span>
+                          </div>
+                        )
+                      )}
                       <button
                         className="p-2 hover:bg-[#ef4444]/5 hover:text-[#ef4444] rounded-full transition-all text-[#999]"
                         onClick={() => onRemoveItem(product._id, item.variantId)}
