@@ -102,7 +102,7 @@ export const verifyPayment = async (req, res) => {
 export const getOrders = async (req, res) => {
     try {
         const user = req.user;
-        // सिर्फ SUCCESSFUL और PENDING ऑर्डर्स दिखाएंगे, लेटेस्ट वाले सबसे ऊपर
+
         const orders = await paymentModel.find({ 
             user: user._id,
             status: { $in: ["SUCCESSFUL", "PENDING"] }
