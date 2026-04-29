@@ -86,6 +86,16 @@ export const useCart = () => {
             console.log(err);
         }
     }
+
+    const handleCreateRazorpayOrder = async () => {
+        try {
+            const res = await cartAPI.createRazorpayOrder();
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
     
     return {
         addToCart,
@@ -96,6 +106,7 @@ export const useCart = () => {
         handleIncrementQuantity,
         handleDecrementQuantity,
         handleRemoveItem,
-        handleClearCart
+        handleClearCart,
+        handleCreateRazorpayOrder
     }
 }

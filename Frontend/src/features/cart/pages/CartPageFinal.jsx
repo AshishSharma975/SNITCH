@@ -4,13 +4,14 @@ import { useCart } from '../hook/useCart';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowLeft, Search, User, Check, LogOut, LogIn, UserPlus } from 'lucide-react';
 import { useAuth } from '../../auth/hook/useAuth';
-
+import{useRazorpay} from "react-razorpay"
 import { toast } from 'react-hot-toast';
 
 const CartPageFinal = () => {
   console.log("Cart component rendering...");
   const navigate = useNavigate();
-  const { handleGetCart, handleRemoveFromCart, handleUpdateQuantity, handleIncrementQuantity, handleDecrementQuantity, handleRemoveItem, handleClearCart } = useCart();
+  const {error , isLoading, Razorpay, isLoaded} = useRazorpay();
+  const { handleGetCart, handleRemoveFromCart, handleUpdateQuantity, handleIncrementQuantity, handleCreateRazorpayOrder,handleDecrementQuantity, handleRemoveItem, handleClearCart } = useCart();
 
   const cartItems = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
@@ -29,6 +30,33 @@ const CartPageFinal = () => {
   useEffect(() => {
     handleGetCart();
   }, []);
+
+    const handlePayment = async() => {
+    const { razorpayOrder: order, key } = await handleCreateRazorpayOrder();
+    const options = {
+      key: key,
+      amount: order.amount, // Amount in paise
+      currency: order.currency,
+      name: "Snitch",
+      description: "Order Payment",
+      order_id: order.id, // Generate order_id on server
+      handler: (response) => {
+        console.log(response);
+        toast.success("Payment Successful!");
+      },
+      prefill: {
+        name: user.fullName,
+        email: user.email,
+        contact: user.phone,
+      },
+      theme: {
+        color: "#F37254",
+      },
+    };
+
+    const razorpayInstance = new Razorpay(options);
+    razorpayInstance.open();
+  };
 
   const onRemoveItem = async (productId, variantId) => {
     await handleRemoveFromCart(productId, variantId);
@@ -382,6 +410,7 @@ const CartPageFinal = () => {
 
               <button
                 className="w-full bg-[#0a0a0a] text-white py-6 rounded-sm text-[11px] tracking-[0.4em] font-bold transition-all hover:bg-[#222] active:scale-[0.99] flex items-center justify-center gap-4 mb-6 shadow-xl shadow-[#0a0a0a]/10"
+                onClick={handlePayment}
               >
                 PROCEED TO CHECKOUT
                 <ArrowRight size={14} />

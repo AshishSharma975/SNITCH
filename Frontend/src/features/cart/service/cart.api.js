@@ -20,6 +20,9 @@ export const cartAPI = {
     },
     incrementQuantity: (productId,variantId) => {
         return cartAPIinstance.patch(`quantity/increment/${productId}/${variantId}`);
+    },
+    createRazorpayOrder: () => {
+        return cartAPIinstance.post(`payment/create/order`);
     }
 }
 
@@ -37,6 +40,12 @@ export const incrementQuantity = async (productId,variantId) => {
 
 export const decrementQuantity = async (productId,variantId) => {
     const response = await cartAPI.updateQuantity(productId,variantId,getCart().items.find(item => item.productId.toString() === productId && item.variantId.toString() === variantId).quantity - 1);
+    console.log(response.data)
+    return response.data;
+}
+
+export const createRazorpayOrder = async (cartId) => {
+    const response = await cartAPI.createRazorpayOrder(cartId);
     console.log(response.data)
     return response.data;
 }
