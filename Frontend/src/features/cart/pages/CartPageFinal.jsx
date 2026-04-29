@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useCart } from '../hook/useCart';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowLeft, Search, User, Check, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowLeft, Search, User, Check, LogOut, LogIn, UserPlus, Package } from 'lucide-react';
 import { useAuth } from '../../auth/hook/useAuth';
 import{useRazorpay} from "react-razorpay"
 import { toast } from 'react-hot-toast';
@@ -11,7 +11,7 @@ const CartPageFinal = () => {
   console.log("Cart component rendering...");
   const navigate = useNavigate();
   const {error , isLoading, Razorpay, isLoaded} = useRazorpay();
-  const { handleGetCart, handleRemoveFromCart, handleUpdateQuantity, handleIncrementQuantity, handleCreateRazorpayOrder,handleDecrementQuantity, handleRemoveItem, handleClearCart } = useCart();
+  const { handleGetCart, handleRemoveFromCart, handleUpdateQuantity, handleIncrementQuantity, handleCreateRazorpayOrder,handleDecrementQuantity, handleRemoveItem, handleClearCart, handleVerifyPayment } = useCart();
 
   const cartItems = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
@@ -40,17 +40,29 @@ const CartPageFinal = () => {
       name: "Snitch",
       description: "Order Payment",
       order_id: order.id, // Generate order_id on server
-      handler: (response) => {
-        console.log(response);
-        toast.success("Payment Successful!");
+      handler: async (response) => {
+        try {
+          // यहाँ बैकएंड को बता रहे हैं कि पेमेंट हो गई है
+          await handleVerifyPayment({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          });
+          
+          toast.success("Payment Successful & Order Placed!");
+          navigate("/order-success"); // नए सक्सेस पेज पर भेजें
+        } catch (err) {
+          toast.error("Payment verification failed!");
+          console.error(err);
+        }
       },
       prefill: {
-        name: user.fullName,
+        name: user.fullname,
         email: user.email,
-        contact: user.phone,
+        contact: user.contact,
       },
       theme: {
-        color: "#F37254",
+        color: "#0a0a0a",
       },
     };
 
@@ -207,15 +219,26 @@ const CartPageFinal = () => {
             {showUserMenu && (
               <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                 {user ? (
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
-                  >
-                    <LogOut size={14} /> LOGOUT
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate("/orders");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] border-b border-[#ede9e3]"
+                    >
+                      <Package size={14} /> MY ARCHIVE
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                    >
+                      <LogOut size={14} /> LOGOUT
+                    </button>
+                  </>
                 ) : (
                   <>
                     <button
@@ -243,16 +266,25 @@ const CartPageFinal = () => {
           </div>
 
           {user && (
-            <div
-              className="relative cursor-pointer group"
-              onClick={() => navigate('/cart')}
-            >
-              <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
-                  {totalItems}
-                </span>
-              )}
+            <div className="flex gap-8 items-center">
+              <div
+                className="cursor-pointer hover:text-[#999] transition-colors"
+                onClick={() => navigate("/orders")}
+                title="My Orders"
+              >
+                <Package size={20} />
+              </div>
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => navigate('/cart')}
+              >
+                <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                    {totalItems}
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useProduct } from "../hook/useproduct";
-import { ShoppingBag, Search, User, Menu, ArrowRight, LogOut, LogIn, UserPlus } from "lucide-react";
+import { ShoppingBag, Search, User, Menu, ArrowRight, LogOut, LogIn, UserPlus, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/hook/useAuth";
 
@@ -127,15 +127,26 @@ const Home = () => {
             {showUserMenu && (
               <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                 {user ? (
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
-                  >
-                    <LogOut size={14} /> LOGOUT
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate("/orders");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] border-b border-[#ede9e3]"
+                    >
+                      <Package size={14} /> MY ARCHIVE
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                    >
+                      <LogOut size={14} /> LOGOUT
+                    </button>
+                  </>
                 ) : (
                   <>
                     <button
@@ -163,16 +174,25 @@ const Home = () => {
           </div>
 
           {user && (
-            <div
-              className="relative cursor-pointer group"
-              onClick={() => navigate("/cart")}
-            >
-              <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
-                  {totalItems}
-                </span>
-              )}
+            <div className="flex gap-8 items-center">
+              <div
+                className="cursor-pointer hover:text-[#999] transition-colors"
+                onClick={() => navigate("/orders")}
+                title="My Orders"
+              >
+                <Package size={20} />
+              </div>
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => navigate("/cart")}
+              >
+                <ShoppingBag size={20} className="group-hover:text-[#999] transition-colors" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#0a0a0a] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                    {totalItems}
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>

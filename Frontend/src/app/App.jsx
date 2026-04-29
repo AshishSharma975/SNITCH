@@ -39,7 +39,26 @@ useEffect(() => {
   };
 }, []);
 
-  const {token} = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
+
+  if (loading) {
+    return (
+      <div style={{ 
+          height: '100vh', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          backgroundColor: '#faf9f7',
+          fontFamily: 'serif',
+          fontSize: '24px',
+          letterSpacing: '0.2em',
+          color: '#0a0a0a'
+      }}>
+          SNITCH
+      </div>
+    );
+  }
+
   return (
     <div>
       <Toaster position="top-center" reverseOrder={false} />

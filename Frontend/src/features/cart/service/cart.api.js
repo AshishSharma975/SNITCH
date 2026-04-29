@@ -23,6 +23,12 @@ export const cartAPI = {
     },
     createRazorpayOrder: () => {
         return cartAPIinstance.post(`payment/create/order`);
+    },
+    verifyPayment: (paymentData) => {
+        return cartAPIinstance.post(`payment/verify`, paymentData);
+    },
+    getOrders: () => {
+        return cartAPIinstance.get(`/payment/orders`);
     }
 }
 

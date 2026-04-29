@@ -97,6 +97,27 @@ export const useCart = () => {
         }
     }
     
+    const handleVerifyPayment = async (paymentData) => {
+        try {
+            const res = await cartAPI.verifyPayment(paymentData);
+            dispatch(clearCart());
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+    const handleGetOrders = async () => {
+        try {
+            const res = await cartAPI.getOrders();
+            return res.data.orders;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+    
     return {
         addToCart,
         getCart,
@@ -107,6 +128,8 @@ export const useCart = () => {
         handleDecrementQuantity,
         handleRemoveItem,
         handleClearCart,
-        handleCreateRazorpayOrder
+        handleCreateRazorpayOrder,
+        handleVerifyPayment,
+        handleGetOrders
     }
 }

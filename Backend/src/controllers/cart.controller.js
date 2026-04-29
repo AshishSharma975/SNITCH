@@ -1,6 +1,8 @@
 import CartModel from "../models/cart.model.js";
 import productModel from "../models/product.model.js";
 import { stockOfVariant } from "../dao/product.dao.js";
+import paymentModel from "../models/payment.model.js";
+
 export const  addToCart = async (req,res,next) => {
  
     const {productId, variantId} = req.params;
@@ -63,6 +65,8 @@ export const  addToCart = async (req,res,next) => {
     });
 }
 
+
+
 export const getCart = async (req,res,next) => {
     const user = req.user;
     const cart = await CartModel.findOne({
@@ -71,7 +75,7 @@ export const getCart = async (req,res,next) => {
     if(!cart){
         return res.status(404).json({
             message:"Cart not found"
-        })
+        })  
     }
     res.status(200).json({
         message:"Cart fetched successfully",
