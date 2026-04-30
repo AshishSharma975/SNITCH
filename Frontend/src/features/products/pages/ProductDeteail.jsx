@@ -45,8 +45,12 @@ const ProductDeteail = () => {
         let attrs = firstVariant.attributes || {};
         if (Array.isArray(attrs)) attrs = attrs[0] || {};
 
+        const fullAttrs = { ...attrs };
+        if (firstVariant.size) fullAttrs['size'] = firstVariant.size;
+        if (firstVariant.color) fullAttrs['color'] = firstVariant.color;
+
         const initialAttrs = {};
-        Object.entries(attrs).forEach(([key, val]) => {
+        Object.entries(fullAttrs).forEach(([key, val]) => {
           if (!key.startsWith('_')) initialAttrs[key] = val;
         });
         setSelectedAttributes(initialAttrs);
@@ -69,7 +73,12 @@ const ProductDeteail = () => {
     product.variants.forEach(variant => {
       let attrs = variant.attributes || {};
       if (Array.isArray(attrs)) attrs = attrs[0] || {};
-      Object.entries(attrs).forEach(([key, val]) => {
+      
+      const fullAttrs = { ...attrs };
+      if (variant.size) fullAttrs['size'] = variant.size;
+      if (variant.color) fullAttrs['color'] = variant.color;
+
+      Object.entries(fullAttrs).forEach(([key, val]) => {
         if (key.startsWith('_')) return;
         if (!groups[key]) groups[key] = new Set();
         groups[key].add(val);
@@ -87,7 +96,12 @@ const ProductDeteail = () => {
     return product.variants.find(variant => {
       let attrs = variant.attributes || {};
       if (Array.isArray(attrs)) attrs = attrs[0] || {};
-      return Object.entries(selectedAttributes).every(([key, val]) => attrs[key] === val);
+      
+      const fullAttrs = { ...attrs };
+      if (variant.size) fullAttrs['size'] = variant.size;
+      if (variant.color) fullAttrs['color'] = variant.color;
+
+      return Object.entries(selectedAttributes).every(([key, val]) => fullAttrs[key] === val);
     });
   };
 
@@ -121,7 +135,7 @@ const ProductDeteail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-[#0a0a0a]/10 border-t-[#0a0a0a] rounded-full animate-spin"></div>
       </div>
     );
@@ -129,7 +143,7 @@ const ProductDeteail = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center p-6 text-center">
         <h2 className="font-serif text-3xl mb-4 text-[#0a0a0a]">Product Not Found</h2>
         <p className="text-[#999] mb-8 font-sans">The piece you're looking for might have been moved or is no longer available.</p>
         <button
@@ -145,9 +159,9 @@ const ProductDeteail = () => {
   const attributeGroups = getAllAttributeGroups();
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
+    <div className="min-h-screen bg-transparent text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav className="flex justify-between items-center px-6 md:px-12 py-8 sticky top-0 bg-[#faf9f7]/80 backdrop-blur-md z-50 border-b border-[#ede9e3]">
+      <nav className="flex justify-between items-center px-6 md:px-12 py-8 sticky top-0 z-50">
         <div className="flex gap-10 items-center">
           <button onClick={() => navigate(-1)} className="hover:opacity-50 transition-opacity p-2 -ml-2">
             <ArrowLeft size={20} />
@@ -176,7 +190,7 @@ const ProductDeteail = () => {
               onClick={() => setShowSearch(!showSearch)}
             />
             {showSearch && (
-              <div className="absolute right-0 mt-4 w-[300px] md:w-[400px] bg-white border border-[#ede9e3] shadow-2xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300 text-left">
+              <div className="absolute right-0 mt-4 w-[300px] md:w-[400px] bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] shadow-2xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300 text-left">
                 <div className="p-4 border-b border-[#ede9e3] flex items-center gap-3">
                   <Search size={16} className="text-[#999]" />
                   <input
@@ -211,9 +225,9 @@ const ProductDeteail = () => {
                               setShowSearch(false);
                               setSearchQuery("");
                             }}
-                            className="flex items-center gap-4 p-4 hover:bg-[#faf9f7] cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
+                            className="flex items-center gap-4 p-4 hover:bg-transparent cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
                           >
-                            <div className="w-12 h-16 bg-[#f2f1ef] rounded-sm overflow-hidden shrink-0">
+                            <div className="w-12 h-16 bg-[#0a0a0a]/5 rounded-sm overflow-hidden shrink-0">
                               <img src={product.images?.[0]?.url} className="w-full h-full object-cover" alt="" />
                             </div>
                             <div>
@@ -248,14 +262,14 @@ const ProductDeteail = () => {
               />
             </div>
             {showUserMenu && (
-              <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="absolute right-0 mt-4 w-48 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                 {user ? (
                   <button
                     onClick={() => {
                       handleLogout();
                       setShowUserMenu(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors"
                   >
                     <LogOut size={14} /> LOGOUT
                   </button>
@@ -266,7 +280,7 @@ const ProductDeteail = () => {
                         navigate("/login");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors border-b border-[#ede9e3]"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors border-b border-[#ede9e3]"
                     >
                       <LogIn size={14} /> LOGIN
                     </button>
@@ -275,7 +289,7 @@ const ProductDeteail = () => {
                         navigate("/register");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors"
                     >
                       <UserPlus size={14} /> SIGN UP
                     </button>
@@ -321,7 +335,7 @@ const ProductDeteail = () => {
             </div>
 
             {/* Main Image Container */}
-            <div className="flex-1 relative aspect-[4/5] md:aspect-[3/4] bg-[#f2f1ef] overflow-hidden group rounded-sm shadow-sm max-w-[500px] lg:max-w-none mx-auto lg:mx-0">
+            <div className="flex-1 relative aspect-[4/5] md:aspect-[3/4] bg-[#0a0a0a]/5 overflow-hidden group rounded-sm shadow-sm max-w-[500px] lg:max-w-none mx-auto lg:mx-0">
 
               {displayImages.length > 0 ? (
                 <>
@@ -334,13 +348,13 @@ const ProductDeteail = () => {
                   {/* Desktop Swipe Buttons */}
                   <button
                     onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
-                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-[#ede9e3]"
+                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/90 hover:bg-white/60 backdrop-blur-xl  border border-[#ede9e3] p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-[#ede9e3]"
                   >
                     <ChevronLeft size={20} />
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
-                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-[#ede9e3]"
+                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/90 hover:bg-white/60 backdrop-blur-xl  border border-[#ede9e3] p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-[#ede9e3]"
                   >
                     <ChevronRight size={20} />
                   </button>
@@ -356,7 +370,7 @@ const ProductDeteail = () => {
               <div className="absolute inset-x-0 bottom-6 px-6 flex items-center justify-between md:hidden">
                 <button
                   onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
-                  className="bg-white/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
+                  className="bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
                 >
                   <ChevronLeft size={18} />
                 </button>
@@ -373,7 +387,7 @@ const ProductDeteail = () => {
 
                 <button
                   onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
-                  className="bg-white/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
+                  className="bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/95 p-3 rounded-full shadow-md active:scale-90 transition-transform"
                 >
                   <ChevronRight size={18} />
                 </button>
@@ -399,10 +413,10 @@ const ProductDeteail = () => {
                 </h1>
               </div>
               <div className="flex gap-2">
-                <button className="p-2.5 hover:bg-white rounded-full transition-all border border-transparent hover:border-[#ede9e3] hover:shadow-sm">
+                <button className="p-2.5 hover:bg-white/60 backdrop-blur-xl  border border-[#ede9e3] rounded-full transition-all border border-transparent hover:border-[#ede9e3] hover:shadow-sm">
                   <Heart size={18} />
                 </button>
-                <button className="p-2.5 hover:bg-white rounded-full transition-all border border-transparent hover:border-[#ede9e3] hover:shadow-sm">
+                <button className="p-2.5 hover:bg-white/60 backdrop-blur-xl  border border-[#ede9e3] rounded-full transition-all border border-transparent hover:border-[#ede9e3] hover:shadow-sm">
                   <Share2 size={18} />
                 </button>
               </div>
@@ -443,7 +457,7 @@ const ProductDeteail = () => {
                         onClick={() => setSelectedAttributes(prev => ({ ...prev, [groupName]: val }))}
                         className={`px-6 py-3 text-[11px] font-bold tracking-widest uppercase transition-all border rounded-sm ${selectedAttributes[groupName] === val
                           ? 'bg-[#0a0a0a] text-white border-[#0a0a0a]'
-                          : 'bg-white text-[#0a0a0a] border-[#ede9e3] hover:border-[#0a0a0a]'
+                          : 'bg-white/60 backdrop-blur-xl  border border-[#ede9e3] text-[#0a0a0a] border-[#ede9e3] hover:border-[#0a0a0a]'
                           }`}
                       >
                         {val}
@@ -473,7 +487,7 @@ const ProductDeteail = () => {
                 { icon: Info, label: "Organic Fiber Composition" }
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3 group">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-[#ede9e3] group-hover:bg-[#0a0a0a] group-hover:text-white transition-all duration-300">
+                  <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-xl  border border-[#ede9e3] flex items-center justify-center border border-[#ede9e3] group-hover:bg-[#0a0a0a] group-hover:text-white transition-all duration-300">
                     <item.icon size={12} strokeWidth={1.5} />
                   </div>
                   <span className="text-[10px] tracking-[0.1em] text-[#666] uppercase font-medium">{item.label}</span>
@@ -484,7 +498,7 @@ const ProductDeteail = () => {
             {/* QUANTITY SELECTOR */}
             <div className="flex flex-col gap-4 mb-10">
               <span className="text-[10px] tracking-[0.25em] text-[#999] uppercase font-bold">Quantity</span>
-              <div className="flex items-center w-fit border border-[#ede9e3] rounded-full px-2 py-1 bg-white">
+              <div className="flex items-center w-fit border border-[#ede9e3] rounded-full px-2 py-1 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="p-3 hover:opacity-50 transition-opacity"
@@ -554,7 +568,7 @@ const ProductDeteail = () => {
 
               <button
                 onClick={() => setIsWishlisted(!isWishlisted)}
-                className={`p-5 rounded-full border border-[#ede9e3] transition-all hover:border-[#0a0a0a] ${isWishlisted ? 'bg-[#0a0a0a] border-[#0a0a0a] text-white' : 'bg-white text-[#0a0a0a]'}`}
+                className={`p-5 rounded-full border border-[#ede9e3] transition-all hover:border-[#0a0a0a] ${isWishlisted ? 'bg-[#0a0a0a] border-[#0a0a0a] text-white' : 'bg-white/60 backdrop-blur-xl  border border-[#ede9e3] text-[#0a0a0a]'}`}
               >
                 <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
               </button>
@@ -584,7 +598,7 @@ const ProductDeteail = () => {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white mt-24">
+      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white/60 backdrop-blur-xl  border border-[#ede9e3] mt-24">
         <h2 className="font-serif text-3xl mb-12 tracking-[0.2em] font-light">SNITCH</h2>
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 mb-12">
           {["PRIVACY", "TERMS", "STUDIO", "JOURNAL"].map((link) => (

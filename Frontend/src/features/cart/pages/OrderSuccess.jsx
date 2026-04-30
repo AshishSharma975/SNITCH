@@ -30,10 +30,10 @@ const OrderSuccess = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center p-6 text-center selection:bg-[#0a0a0a] selection:text-white">
+        <div className="min-h-screen bg-transparent flex flex-col items-center justify-center p-6 text-center selection:bg-[#0a0a0a] selection:text-white">
             {/* Animated Checkmark Container */}
             <div className="relative mb-12">
-                <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl shadow-[#22c55e]/10 animate-in zoom-in duration-700">
+                <div className="w-32 h-32 bg-white/60 backdrop-blur-xl  border border-[#ede9e3] rounded-full flex items-center justify-center shadow-2xl shadow-[#22c55e]/10 animate-in zoom-in duration-700">
                     <CheckCircle size={64} strokeWidth={1} className="text-[#22c55e] animate-in slide-in-from-bottom-4 duration-1000" />
                 </div>
                 {/* Subtle rings */}
@@ -59,7 +59,7 @@ const OrderSuccess = () => {
                 
                 <button
                     onClick={() => navigate('/')}
-                    className="group bg-transparent border border-[#ede9e3] text-[#0a0a0a] px-10 py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-white active:scale-[0.98] flex items-center justify-center gap-4"
+                    className="group bg-transparent border border-[#ede9e3] text-[#0a0a0a] px-10 py-5 rounded-sm text-[11px] tracking-[0.3em] font-bold transition-all hover:bg-white/60 backdrop-blur-xl  border border-[#ede9e3] active:scale-[0.98] flex items-center justify-center gap-4"
                 >
                     <ShoppingBag size={16} />
                     CONTINUE EXPLORING

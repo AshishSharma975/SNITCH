@@ -186,7 +186,7 @@ const SellerProductDeteail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-[#0a0a0a]/10 border-t-[#0a0a0a] rounded-full animate-spin"></div>
       </div>
     );
@@ -194,7 +194,7 @@ const SellerProductDeteail = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center p-6 text-center">
         <h2 className="font-serif text-3xl mb-4 text-[#0a0a0a]">Product Not Found</h2>
         <button 
           onClick={() => navigate('/dashboard')} 
@@ -207,9 +207,9 @@ const SellerProductDeteail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
+    <div className="min-h-screen bg-transparent text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav className="flex justify-between items-center px-6 md:px-12 py-6 sticky top-0 bg-[#faf9f7]/80 backdrop-blur-md z-50 border-b border-[#ede9e3]">
+      <nav className="flex justify-between items-center px-6 md:px-12 py-6 sticky top-0 bg-white/60 backdrop-blur-xl  z-50 border-b border-[#ede9e3]">
         <div className="flex gap-8 items-center">
           <button onClick={() => navigate(-1)} className="hover:text-[#999] transition-colors p-2 -ml-2">
             <ArrowLeft size={20} />
@@ -239,15 +239,15 @@ const SellerProductDeteail = () => {
           
           {/* ── Left: Core Product Identity ── */}
           <div className="lg:col-span-4 space-y-12">
-            <section className="bg-white border border-[#ede9e3] rounded-sm p-8 shadow-sm">
+            <section className="bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-sm p-8 shadow-sm">
               <div className="flex items-center gap-4 mb-10">
-                <div className="w-10 h-10 bg-[#faf9f7] border border-[#ede9e3] rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-transparent border border-[#ede9e3] rounded-full flex items-center justify-center">
                   <Package size={16} strokeWidth={1.5} />
                 </div>
                 <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#0a0a0a]">Archive Original</h3>
               </div>
               
-              <div className="aspect-[3/4] bg-[#faf9f7] overflow-hidden rounded-sm mb-10 relative group">
+              <div className="aspect-[3/4] bg-transparent overflow-hidden rounded-sm mb-10 relative group">
                 <img 
                   src={product.images?.[activeImage]?.url} 
                   alt={product.title} 
@@ -306,10 +306,10 @@ const SellerProductDeteail = () => {
 
           {/* ── Right: Variants & Stock Architecture ── */}
           <div className="lg:col-span-8 space-y-12">
-            <section className="bg-white border border-[#ede9e3] rounded-sm p-8 md:p-12 shadow-sm">
+            <section className="bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-sm p-8 md:p-12 shadow-sm">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16">
                 <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 bg-[#faf9f7] border border-[#ede9e3] rounded-full flex items-center justify-center shadow-inner">
+                  <div className="w-12 h-12 bg-transparent border border-[#ede9e3] rounded-full flex items-center justify-center shadow-inner">
                     <LayoutGrid size={18} strokeWidth={1.5} />
                   </div>
                   <div>
@@ -329,9 +329,9 @@ const SellerProductDeteail = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {product.variants?.length > 0 ? (
                   product.variants.map((variant, idx) => (
-                    <div key={idx} className="group relative bg-[#faf9f7] border border-[#ede9e3] rounded-sm overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-[#0a0a0a]/5">
+                    <div key={idx} className="group relative bg-transparent border border-[#ede9e3] rounded-sm overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-[#0a0a0a]/5">
                       <div className="flex flex-col sm:flex-row h-full">
-                        <div className="w-full sm:w-1/3 aspect-[3/4] bg-white overflow-hidden relative">
+                        <div className="w-full sm:w-1/3 aspect-[3/4] bg-white/60 backdrop-blur-xl  border border-[#ede9e3] overflow-hidden relative">
                           <img 
                             src={variant.images?.[0]?.url || product.images?.[0]?.url} 
                             className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000" 
@@ -365,7 +365,7 @@ const SellerProductDeteail = () => {
                               </div>
                             </div>
                             <div className="flex flex-col items-end gap-2">
-                              <span className="text-[12px] font-bold tracking-tight px-4 py-2 bg-white border border-[#ede9e3] rounded-full shadow-sm text-[#0a0a0a]">
+                              <span className="text-[12px] font-bold tracking-tight px-4 py-2 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-full shadow-sm text-[#0a0a0a]">
                                 {variant.price?.amount?.toLocaleString()} {variant.price?.currency || 'INR'}
                               </span>
                               {variant.stock <= 5 && variant.stock > 0 && (
@@ -381,7 +381,7 @@ const SellerProductDeteail = () => {
                                 <div className="relative group">
                                   <input 
                                     type="number" 
-                                    className="w-24 bg-white border border-[#ede9e3] rounded-full px-4 py-2 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-all"
+                                    className="w-24 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-full px-4 py-2 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-all"
                                     defaultValue={variant.stock}
                                     onBlur={(e) => handleUpdateStock(variant._id, e.target.value)}
                                   />
@@ -396,12 +396,12 @@ const SellerProductDeteail = () => {
                             </div>
                             
                             <div className="flex items-end justify-end gap-3">
-                              <button className="p-2.5 bg-[#faf9f7] hover:bg-[#0a0a0a] hover:text-white rounded-full transition-all border border-[#ede9e3]">
+                              <button className="p-2.5 bg-transparent hover:bg-[#0a0a0a] hover:text-white rounded-full transition-all border border-[#ede9e3]">
                                 <Edit3 size={14} />
                               </button>
                               <button 
                                 onClick={() => handleDeleteVariant(variant._id)}
-                                className="p-2.5 bg-[#faf9f7] hover:bg-[#ef4444] hover:text-white rounded-full transition-all border border-[#ede9e3]"
+                                className="p-2.5 bg-transparent hover:bg-[#ef4444] hover:text-white rounded-full transition-all border border-[#ede9e3]"
                               >
                                 <Trash2 size={14} />
                               </button>
@@ -412,12 +412,12 @@ const SellerProductDeteail = () => {
                       
                       {/* Hover Actions */}
                       <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                        <button className="p-3 bg-white hover:bg-[#0a0a0a] hover:text-white rounded-full border border-[#ede9e3] shadow-xl transition-all">
+                        <button className="p-3 bg-white/60 backdrop-blur-xl  border border-[#ede9e3] hover:bg-[#0a0a0a] hover:text-white rounded-full border border-[#ede9e3] shadow-xl transition-all">
                           <Edit3 size={14} />
                         </button>
                         <button 
                           onClick={() => handleDeleteVariant(variant._id)}
-                          className="p-3 bg-white hover:bg-[#ef4444] hover:text-white rounded-full border border-[#ede9e3] shadow-xl transition-all"
+                          className="p-3 bg-white/60 backdrop-blur-xl  border border-[#ede9e3] hover:bg-[#ef4444] hover:text-white rounded-full border border-[#ede9e3] shadow-xl transition-all"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -425,8 +425,8 @@ const SellerProductDeteail = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-2 py-32 flex flex-col items-center justify-center bg-[#faf9f7]/50 border border-dashed border-[#ede9e3] rounded-sm">
-                    <div className="w-16 h-16 bg-white border border-[#ede9e3] rounded-full flex items-center justify-center mb-8 shadow-sm">
+                  <div className="col-span-2 py-32 flex flex-col items-center justify-center bg-transparent/50 border border-dashed border-[#ede9e3] rounded-sm">
+                    <div className="w-16 h-16 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-full flex items-center justify-center mb-8 shadow-sm">
                       <Layers size={24} className="text-[#999]" strokeWidth={1} />
                     </div>
                     <p className="text-[10px] tracking-[0.4em] text-[#999] uppercase font-bold">No Archive Pieces Configured</p>
@@ -448,13 +448,13 @@ const SellerProductDeteail = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 md:px-6">
           <div 
-            className="absolute inset-0 bg-[#faf9f7]/95 backdrop-blur-sm"
+            className="absolute inset-0 bg-transparent/95 "
             onClick={() => setIsModalOpen(false)}
           ></div>
-          <div className="relative bg-white border border-[#ede9e3] rounded-sm w-full max-w-[900px] max-h-[90vh] overflow-y-auto shadow-2xl overflow-hidden flex flex-col">
-            <div className="sticky top-0 bg-white border-b border-[#ede9e3] p-10 flex justify-between items-center z-10">
+          <div className="relative bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-sm w-full max-w-[900px] max-h-[90vh] overflow-y-auto shadow-2xl overflow-hidden flex flex-col">
+            <div className="sticky top-0 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border-b border-[#ede9e3] p-10 flex justify-between items-center z-10">
               <div className="flex items-center gap-6">
-                <div className="w-12 h-12 bg-[#faf9f7] border border-[#ede9e3] rounded-full flex items-center justify-center shadow-inner">
+                <div className="w-12 h-12 bg-transparent border border-[#ede9e3] rounded-full flex items-center justify-center shadow-inner">
                   <Plus size={20} />
                 </div>
                 <div>
@@ -462,7 +462,7 @@ const SellerProductDeteail = () => {
                   <p className="text-[9px] text-[#999] mt-2 font-bold uppercase tracking-[0.2em]">Adding to {product.title}</p>
                 </div>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-[#faf9f7] border border-[#ede9e3] rounded-full transition-colors">
+              <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-transparent border border-[#ede9e3] rounded-full transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -476,18 +476,18 @@ const SellerProductDeteail = () => {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                   {newVariant.images.length < 7 && (
-                    <label className="aspect-[3/4] border border-dashed border-[#ede9e3] rounded-sm flex flex-col items-center justify-center gap-4 hover:border-[#0a0a0a] hover:bg-[#faf9f7] transition-all cursor-pointer group bg-[#faf9f7]/30">
+                    <label className="aspect-[3/4] border border-dashed border-[#ede9e3] rounded-sm flex flex-col items-center justify-center gap-4 hover:border-[#0a0a0a] hover:bg-transparent transition-all cursor-pointer group bg-transparent/30">
                       <input type="file" multiple className="hidden" onChange={handleImageUpload} accept="image/*" />
                       <UploadCloud size={28} className="text-[#999] group-hover:text-[#0a0a0a] transition-colors" strokeWidth={1} />
                       <span className="text-[8px] tracking-[0.2em] uppercase font-bold text-[#999]">Add Media</span>
                     </label>
                   )}
                   {newVariant.images.map((img, i) => (
-                    <div key={i} className="aspect-[3/4] bg-[#faf9f7] rounded-sm border border-[#ede9e3] relative group overflow-hidden">
+                    <div key={i} className="aspect-[3/4] bg-transparent rounded-sm border border-[#ede9e3] relative group overflow-hidden">
                        <img src={img.url} className="w-full h-full object-cover" />
                        <button 
                         onClick={() => removeImage(i)}
-                        className="absolute top-2 right-2 p-1 bg-white border border-[#ede9e3] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 p-1 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                        >
                          <X size={12} />
                        </button>
@@ -517,19 +517,19 @@ const SellerProductDeteail = () => {
                           placeholder="Key (e.g. Size, Voltage)"
                           value={String(key)}
                           onChange={(e) => updateAttributeKey(key, e.target.value)}
-                          className="w-1/3 bg-[#faf9f7] border-r border-[#ede9e3] px-4 py-3 text-[10px] text-[#0a0a0a] font-bold uppercase tracking-widest focus:outline-none" 
+                          className="w-1/3 bg-transparent border-r border-[#ede9e3] px-4 py-3 text-[10px] text-[#0a0a0a] font-bold uppercase tracking-widest focus:outline-none" 
                         />
                         <input 
                           type="text" 
                           placeholder="Value"
                           value={typeof value === 'object' ? JSON.stringify(value) : String(value)}
                           onChange={(e) => updateAttributeValue(key, e.target.value)}
-                          className="w-2/3 bg-white px-4 py-3 text-[10px] font-bold focus:outline-none flex-1" 
+                          className="w-2/3 bg-white/60 backdrop-blur-xl  border border-[#ede9e3] px-4 py-3 text-[10px] font-bold focus:outline-none flex-1" 
                         />
                         {Object.keys(newVariant.attributes).length > 1 && (
                           <button 
                             onClick={() => removeAttribute(key)}
-                            className="px-3 bg-white border-l border-[#ede9e3] text-[#ef4444] hover:bg-[#ef4444] hover:text-white transition-colors"
+                            className="px-3 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border-l border-[#ede9e3] text-[#ef4444] hover:bg-[#ef4444] hover:text-white transition-colors"
                           >
                             <Trash2 size={12} />
                           </button>
@@ -550,7 +550,7 @@ const SellerProductDeteail = () => {
                         if (emptyKey) updateAttributeKey(emptyKey, preset);
                         else setNewVariant(prev => ({ ...prev, attributes: { ...prev.attributes, [preset]: '' } }));
                       }}
-                      className="px-3 py-1 bg-white border border-[#ede9e3] rounded-full text-[9px] font-bold tracking-widest text-[#999] hover:border-[#0a0a0a] hover:text-[#0a0a0a] transition-all"
+                      className="px-3 py-1 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] rounded-full text-[9px] font-bold tracking-widest text-[#999] hover:border-[#0a0a0a] hover:text-[#0a0a0a] transition-all"
                      >
                        + {preset}
                      </button>
@@ -571,7 +571,7 @@ const SellerProductDeteail = () => {
                           placeholder={product.price?.amount}
                           value={newVariant.price.amount || ''}
                           onChange={(e) => setNewVariant(prev => ({ ...prev, price: { ...prev.price, amount: e.target.value } }))}
-                          className="w-full bg-[#faf9f7] border border-[#ede9e3] rounded-sm px-5 py-4 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#0a0a0a]" 
+                          className="w-full bg-transparent border border-[#ede9e3] rounded-sm px-5 py-4 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#0a0a0a]" 
                         />
                         <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[9px] font-bold text-[#999] uppercase tracking-[0.2em]">{product.price?.currency}</span>
                       </div>
@@ -582,7 +582,7 @@ const SellerProductDeteail = () => {
                         type="number" 
                         value={newVariant.stock}
                         onChange={(e) => setNewVariant(prev => ({ ...prev, stock: e.target.value }))}
-                        className="w-full bg-[#faf9f7] border border-[#ede9e3] rounded-sm px-5 py-4 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#0a0a0a]" 
+                        className="w-full bg-transparent border border-[#ede9e3] rounded-sm px-5 py-4 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#0a0a0a]" 
                       />
                     </div>
                   </div>
@@ -590,7 +590,7 @@ const SellerProductDeteail = () => {
               </div>
             </div>
 
-            <div className="p-10 border-t border-[#ede9e3] flex flex-col sm:flex-row gap-6 bg-[#faf9f7]/30">
+            <div className="p-10 border-t border-[#ede9e3] flex flex-col sm:flex-row gap-6 bg-transparent/30">
               <button 
                  onClick={() => setIsModalOpen(false)}
                  className="flex-1 py-5 border border-[#ede9e3] hover:bg-[#0a0a0a] hover:text-white rounded-full text-[10px] font-bold tracking-[0.4em] uppercase transition-all shadow-sm"

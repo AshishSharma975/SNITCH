@@ -320,7 +320,7 @@ const Dashboard = () => {
             <div style={{ padding: "100px 0", textAlign: "center" }}>
               <span style={{ fontSize: "14px", color: colors.textMuted }}>Refining archive...</span>
             </div>
-          ) : !sellerproduct || sellerproduct.length === 0 ? (
+          ) : !Array.isArray(sellerproduct) || sellerproduct.length === 0 ? (
             <div
               style={{
                 padding: "120px 0",

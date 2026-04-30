@@ -12,7 +12,8 @@ export const useProduct = () => {
     async function handleCreateProduct(formData){
         try {
             const data = await createProduct(formData);
-            dispatch(setsellerproduct(data.product));
+            // DO NOT overwrite the array state with the single product object.
+            // The dashboard will refetch the list when it mounts.
             return data.product;
         } catch (error) {
             throw error;

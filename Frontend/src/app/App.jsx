@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+import PremiumBackground from '../components/PremiumBackground';
 
 const App = () => {
 
@@ -48,7 +49,7 @@ useEffect(() => {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          backgroundColor: '#faf9f7',
+          backgroundColor: 'transparent',
           fontFamily: 'serif',
           fontSize: '24px',
           letterSpacing: '0.2em',
@@ -60,7 +61,8 @@ useEffect(() => {
   }
 
   return (
-    <div>
+    <div className="relative min-h-screen text-[#0a0a0a]">
+      <PremiumBackground />
       <Toaster position="top-center" reverseOrder={false} />
       <RouterProvider router={routes} />
     </div>

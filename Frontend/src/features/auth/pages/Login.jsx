@@ -94,7 +94,7 @@ const Login = () => {
             <br />
             <em>Back.</em>
           </h2>
-          <div className="w-8 h-px bg-white/30 mb-4" />
+          <div className="w-8 h-px bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/30 mb-4" />
           <p className="text-white/40 text-[12px] tracking-[0.1em] leading-relaxed max-w-xs uppercase">
             Your curated wardrobe awaits
           </p>
@@ -102,7 +102,7 @@ const Login = () => {
       </div>
 
       {/* ── Right Form Panel ── */}
-      <div className="flex-1 bg-[#faf9f7] flex items-center justify-center p-8 md:p-14 relative">
+      <div className="flex-1 bg-transparent flex items-center justify-center p-8 md:p-14 relative">
         {/* subtle texture overlay */}
         <div
           className="absolute inset-0 opacity-[0.015] pointer-events-none"
@@ -167,7 +167,7 @@ const Login = () => {
                 onChange={handleChange}
                 placeholder="you@example.com"
                 required
-                className="w-full bg-white border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300"
+                className="w-full bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               />
             </div>
@@ -188,7 +188,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="••••••••"
                   required
-                  className="w-full bg-white border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 pr-12 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300"
+                  className="w-full bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 pr-12 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 />
                 <button

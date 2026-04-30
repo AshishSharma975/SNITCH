@@ -57,7 +57,7 @@ const Register = () => {
   };
 
   const inputClass =
-    "w-full bg-white border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300";
+    "w-full bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#e5e2dd] text-[#0a0a0a] placeholder-[#ccc] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300";
 
   return (
     <div
@@ -100,7 +100,7 @@ const Register = () => {
             <br />
             <em>the moment.</em>
           </h2>
-          <div className="w-8 h-px bg-white/30 mb-4" />
+          <div className="w-8 h-px bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/30 mb-4" />
           <p className="text-white/40 text-[11px] tracking-[0.12em] leading-relaxed max-w-xs uppercase">
             Curated streetwear for the modern aesthetic
           </p>
@@ -108,7 +108,7 @@ const Register = () => {
       </div>
 
       {/* ── Right Form Panel ── */}
-      <div className="flex-1 bg-[#faf9f7] flex items-center justify-center p-8 md:p-14 relative overflow-y-auto">
+      <div className="flex-1 bg-transparent flex items-center justify-center p-8 md:p-14 relative overflow-y-auto">
         <div
           className="absolute inset-0 opacity-[0.015] pointer-events-none"
           style={{
@@ -243,7 +243,7 @@ const Register = () => {
               <div
                 className={`w-[18px] h-[18px] rounded-md border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${formData.isSeller
                     ? "bg-[#0a0a0a] border-[#0a0a0a]"
-                    : "bg-white border-[#d5d2cd] group-hover:border-[#999]"
+                    : "bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border-[#d5d2cd] group-hover:border-[#999]"
                   }`}
               >
                 {formData.isSeller && (

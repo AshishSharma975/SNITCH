@@ -16,7 +16,10 @@ const CreateProduct = () => {
     title: "",
     description: "",
     priceAmount: "",
-    priceCurrency: "USD",
+    priceCurrency: "INR",
+    color: "",
+    size: "",
+    stock: "1",
   });
   const [images, setImages] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -65,10 +68,26 @@ const CreateProduct = () => {
       payload.append("description", formData.description.trim());
       payload.append("priceAmount", formData.priceAmount);
       payload.append("priceCurrency", formData.priceCurrency);
+      payload.append("color", formData.color.trim());
+      payload.append("size", formData.size.trim());
+      payload.append("stock", formData.stock);
       images.forEach((img) => payload.append("images", img));
       await handleCreateProduct(payload);
       setSuccess(true);
-      setTimeout(() => navigate("/"), 1800);
+      
+      // Reset form instead of redirecting
+      setFormData({
+        title: "",
+        description: "",
+        priceAmount: "",
+        priceCurrency: "INR",
+        color: "",
+        size: "",
+        stock: "1",
+      });
+      setImages([]);
+      
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -82,7 +101,7 @@ const CreateProduct = () => {
 
   // ── shared input style ──
   const inp =
-    "w-full bg-white border border-[#e5e0d8] text-[#0a0a0a] placeholder-[#c8c4be] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300";
+    "w-full bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#e5e0d8] text-[#0a0a0a] placeholder-[#c8c4be] rounded-xl px-4 py-3.5 text-[13px] outline-none focus:border-[#0a0a0a] transition-colors duration-300";
 
   const sectionLabel = {
     fontFamily: "'DM Sans', sans-serif",
@@ -133,9 +152,7 @@ const CreateProduct = () => {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          backgroundColor: "rgba(250,249,247,0.96)",
-          backdropFilter: "blur(8px)",
-          borderBottom: "1px solid #ede9e3",
+          backgroundColor: "transparent",
           padding: "16px 56px",
           display: "flex",
           alignItems: "center",
@@ -337,6 +354,56 @@ const CreateProduct = () => {
                       }}
                       className={inp}
                     />
+                  </div>
+
+                  {/* Color, Size & Stock */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: "16px",
+                    }}
+                  >
+                    <div>
+                      <label style={fieldLabel}>Color</label>
+                      <input
+                        name="color"
+                        type="text"
+                        value={formData.color}
+                        onChange={handleChange}
+                        placeholder="e.g. Black"
+                        required
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        className={inp}
+                      />
+                    </div>
+                    <div>
+                      <label style={fieldLabel}>Size</label>
+                      <input
+                        name="size"
+                        type="text"
+                        value={formData.size}
+                        onChange={handleChange}
+                        placeholder="e.g. M, L, XL"
+                        required
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        className={inp}
+                      />
+                    </div>
+                    <div>
+                      <label style={fieldLabel}>Initial Stock</label>
+                      <input
+                        name="stock"
+                        type="number"
+                        min="1"
+                        value={formData.stock}
+                        onChange={handleChange}
+                        placeholder="1"
+                        required
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        className={inp}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

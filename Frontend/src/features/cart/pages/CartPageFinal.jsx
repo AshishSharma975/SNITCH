@@ -95,7 +95,7 @@ const CartPageFinal = () => {
 
   if (!cartItems || cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center p-6 text-center">
         <div className="w-24 h-24 bg-[#0a0a0a]/5 rounded-full flex items-center justify-center mb-8">
           <ShoppingBag size={40} strokeWidth={1} className="text-[#0a0a0a]/20" />
         </div>
@@ -114,9 +114,9 @@ const CartPageFinal = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
+    <div className="min-h-screen bg-transparent text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-     <nav className="flex justify-between items-center px-6 md:px-12 py-8 bg-[#faf9f7]/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#ede9e3]">
+     <nav className="flex justify-between items-center px-6 md:px-12 py-8 bg-white/60 backdrop-blur-xl  sticky top-0 z-50 border-b border-[#ede9e3]">
         <div className="flex gap-10 items-center">
           <button onClick={() => navigate(-1)} className="hover:opacity-50 transition-opacity p-2 -ml-2">
             <ArrowLeft size={20} />
@@ -145,7 +145,7 @@ const CartPageFinal = () => {
               onClick={() => setShowSearch(!showSearch)}
             />
             {showSearch && (
-              <div className="absolute right-0 mt-4 w-[300px] md:w-[400px] bg-white border border-[#ede9e3] shadow-2xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300">
+              <div className="absolute right-0 mt-4 w-[300px] md:w-[400px] bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] shadow-2xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300">
                 <div className="p-4 border-b border-[#ede9e3] flex items-center gap-3 text-left">
                   <Search size={16} className="text-[#999]" />
                   <input
@@ -180,9 +180,9 @@ const CartPageFinal = () => {
                               setShowSearch(false);
                               setSearchQuery("");
                             }}
-                            className="flex items-center gap-4 p-4 hover:bg-[#faf9f7] cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
+                            className="flex items-center gap-4 p-4 hover:bg-transparent cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
                           >
-                            <div className="w-12 h-16 bg-[#f2f1ef] rounded-sm overflow-hidden shrink-0">
+                            <div className="w-12 h-16 bg-[#0a0a0a]/5 rounded-sm overflow-hidden shrink-0">
                               <img src={product.images?.[0]?.url} className="w-full h-full object-cover" alt="" />
                             </div>
                             <div>
@@ -217,7 +217,7 @@ const CartPageFinal = () => {
               />
             </div>
             {showUserMenu && (
-              <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="absolute right-0 mt-4 w-48 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                 {user ? (
                   <>
                     <button
@@ -225,7 +225,7 @@ const CartPageFinal = () => {
                         navigate("/orders");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] border-b border-[#ede9e3]"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent border-b border-[#ede9e3]"
                     >
                       <Package size={14} /> MY ARCHIVE
                     </button>
@@ -234,7 +234,7 @@ const CartPageFinal = () => {
                         handleLogout();
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors"
                     >
                       <LogOut size={14} /> LOGOUT
                     </button>
@@ -246,7 +246,7 @@ const CartPageFinal = () => {
                         navigate("/login");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors border-b border-[#ede9e3]"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors border-b border-[#ede9e3]"
                     >
                       <LogIn size={14} /> LOGIN
                     </button>
@@ -255,7 +255,7 @@ const CartPageFinal = () => {
                         navigate("/register");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors"
                     >
                       <UserPlus size={14} /> SIGN UP
                     </button>
@@ -299,7 +299,7 @@ const CartPageFinal = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
 
           {/* ── Item List ── */}
-          <div className="lg:col-span-8 space-y-12">
+          <div className="lg:col-span-8 space-y-6">
             {cartItems.map((item) => {
               const product = item.productId;
               const variant = product?.variants?.find(v => v._id === item.variantId);
@@ -308,10 +308,10 @@ const CartPageFinal = () => {
               const displayPrice = product?.price;
 
               return (
-                <div key={item._id} className="group flex flex-col sm:flex-row gap-8 pb-12 border-b border-[#0a0a0a]/5 last:border-0">
+                <div key={item._id} className="group flex flex-col sm:flex-row gap-6 md:gap-8 p-6 md:p-8 bg-white/60 backdrop-blur-md border border-[#ede9e3]/80 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-all duration-300">
                   {/* Image Container */}
                   <div
-                    className="w-full sm:w-48 aspect-[3/4] bg-[#f2f1ef] overflow-hidden rounded-sm shrink-0 cursor-pointer"
+                    className="w-full sm:w-48 aspect-[3/4] bg-[#0a0a0a]/5 overflow-hidden rounded-sm shrink-0 cursor-pointer"
                     onClick={() => navigate(`/product/details/${product._id}`)}
                   >
                     <img
@@ -380,7 +380,7 @@ const CartPageFinal = () => {
                     <div className="mt-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                       {/* Quantity Controls */}
 
-                      <div className="flex items-center border border-[#ede9e3] rounded-full px-2 py-1 w-fit bg-white">
+                      <div className="flex items-center border border-[#ede9e3] rounded-full px-2 py-1 w-fit bg-white/60 backdrop-blur-xl  border border-[#ede9e3]">
                         <button
                           onClick={() => item.quantity > 1 ? onUpdateQty(product._id, item.variantId, item.quantity - 1) : onRemoveItem(product._id, item.variantId)}
                           className="p-2 hover:opacity-50 transition-opacity"
@@ -412,7 +412,7 @@ const CartPageFinal = () => {
 
           {/* ── Summary Column ── */}
           <aside className="lg:col-span-4 sticky top-32">
-            <div className="bg-white border border-[#ede9e3] p-8 md:p-10 rounded-sm shadow-sm">
+            <div className="bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] p-8 md:p-10 rounded-sm shadow-sm">
               <h2 className="font-serif text-2xl mb-8">Summary</h2>
 
               <div className="space-y-4 mb-8">
@@ -430,7 +430,7 @@ const CartPageFinal = () => {
                 </div>
               </div>
 
-              <div className="h-px bg-[#f2f1ef] w-full mb-8"></div>
+              <div className="h-px bg-[#0a0a0a]/5 w-full mb-8"></div>
 
               <div className="flex justify-between items-baseline mb-10">
                 <span className="font-serif text-xl">Total</span>
@@ -479,7 +479,7 @@ const CartPageFinal = () => {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white mt-24">
+      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white/60 backdrop-blur-xl  border border-[#ede9e3] mt-24">
         <h2 className="font-serif text-3xl mb-12 tracking-[0.2em] font-light">SNITCH</h2>
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 mb-12">
           {["PRIVACY", "TERMS", "STUDIO", "JOURNAL"].map((link) => (

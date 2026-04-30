@@ -3,11 +3,11 @@ import { uploadFile } from "../services/storage.service.js";
 
 export async function createProduct(req, res) {
   try {
-    const { title, description, priceAmount, priceCurrency } = req.body;
+    const { title, description, priceAmount, priceCurrency, color, size, stock } = req.body;
     const seller = req.user;
 
     console.log("Creating product for seller:", seller._id);
-    console.log("Body fields:", { title, priceAmount, priceCurrency });
+    console.log("Body fields:", { title, priceAmount, priceCurrency, color, size, stock });
     console.log("Files received:", req.files?.length || 0);
 
     const files = req.files || [];
@@ -48,6 +48,16 @@ export async function createProduct(req, res) {
       },
       seller: seller._id,
       images: images,
+      variants: [{
+        images: images,
+        color: color || "Default",
+        size: size || "Free Size",
+        stock: Number(stock) || 1,
+        price: {
+          amount: Number(priceAmount),
+          currency: priceCurrency || "INR",
+        }
+      }]
     });
 
     console.log("Product created successfully:", product._id);

@@ -21,10 +21,10 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
+    <div className="min-h-screen bg-transparent text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav className="flex justify-between items-center px-6 md:px-12 py-8 sticky top-0 bg-[#faf9f7]/80 backdrop-blur-md z-50 border-b border-[#ede9e3]">
-        <div className="flex gap-10 items-center">
+      <nav className="flex justify-between items-center px-4 md:px-12 py-4 md:py-8 sticky top-0 bg-transparent/80 backdrop-blur-md z-50">
+        <div className="flex-1 flex justify-start items-center gap-10">
           <Menu size={20} className="cursor-pointer hover:opacity-50 transition-opacity" />
           <div className="hidden lg:flex gap-8">
             {["NEW IN", "COLLECTIONS", "CURATION"].map((item) => (
@@ -40,21 +40,21 @@ const Home = () => {
 
         <div
           onClick={() => navigate("/")}
-          className="font-serif text-3xl md:text-4xl tracking-[0.15em] cursor-pointer absolute left-1/2 -translate-x-1/2"
+          className="font-serif text-base sm:text-2xl md:text-4xl tracking-[0.15em] cursor-pointer whitespace-nowrap shrink-0 text-center"
         >
           SNITCH
         </div>
 
-        <div className="flex gap-8 items-center">
+        <div className="flex-1 flex justify-end gap-2 sm:gap-4 md:gap-8 items-center bg-transparent backdrop-blur-md md:backdrop-blur-none py-1 rounded-full relative z-10">
           <div className="relative group">
             <Search 
               size={20} 
-              className="cursor-pointer hidden sm:block hover:text-[#999] transition-colors" 
+              className="cursor-pointer hover:text-[#999] transition-colors" 
               onClick={() => setShowSearch(!showSearch)}
             />
             {showSearch && (
-              <div className="absolute right-0 mt-4 w-[300px] md:w-[400px] bg-white border border-[#ede9e3] shadow-2xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300">
-                <div className="p-4 border-b border-[#ede9e3] flex items-center gap-3">
+              <div className="fixed top-[70px] left-4 right-4 sm:absolute sm:top-auto sm:left-auto sm:right-0 mt-2 sm:mt-4 w-auto sm:w-[350px] md:w-[400px] bg-white/60 backdrop-blur-xl border border-[#ede9e3]/60 shadow-xl z-[70] animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="p-4 border-b border-[#ede9e3]/60 flex items-center gap-3">
                   <Search size={16} className="text-[#999]" />
                   <input
                     autoFocus
@@ -88,9 +88,9 @@ const Home = () => {
                               setShowSearch(false);
                               setSearchQuery("");
                             }}
-                            className="flex items-center gap-4 p-4 hover:bg-[#faf9f7] cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
+                            className="flex items-center gap-4 p-4 hover:bg-transparent cursor-pointer transition-colors border-b border-[#faf9f7] last:border-0"
                           >
-                            <div className="w-12 h-16 bg-[#f2f1ef] rounded-sm overflow-hidden shrink-0">
+                            <div className="w-12 h-16 bg-[#0a0a0a]/5 rounded-sm overflow-hidden shrink-0">
                               <img src={product.images?.[0]?.url} className="w-full h-full object-cover" alt="" />
                             </div>
                             <div>
@@ -113,9 +113,9 @@ const Home = () => {
           </div>
           
           <div className="relative">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowUserMenu(!showUserMenu)}>
+            <div className="flex items-center gap-1 sm:gap-2 cursor-pointer" onClick={() => setShowUserMenu(!showUserMenu)}>
               {user && (
-                <span className="text-[11px] tracking-[0.1em] font-bold uppercase hidden sm:block hover:text-[#999] transition-colors">
+                <span className="text-[9px] md:text-[11px] tracking-[0.1em] font-bold uppercase hover:text-[#999] transition-colors whitespace-nowrap max-w-[60px] sm:max-w-none overflow-hidden text-ellipsis">
                   {user.fullname}
                 </span>
               )}
@@ -125,7 +125,7 @@ const Home = () => {
               />
             </div>
             {showUserMenu && (
-              <div className="absolute right-0 mt-4 w-48 bg-white border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="absolute right-0 mt-4 w-48 bg-white/60 backdrop-blur-xl  border border-[#ede9e3]/60  shadow-xl border border-[#ede9e3] shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                 {user ? (
                   <>
                     <button
@@ -133,7 +133,7 @@ const Home = () => {
                         navigate("/orders");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] border-b border-[#ede9e3]"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent border-b border-[#ede9e3]"
                     >
                       <Package size={14} /> MY ARCHIVE
                     </button>
@@ -142,7 +142,7 @@ const Home = () => {
                         handleLogout();
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors"
                     >
                       <LogOut size={14} /> LOGOUT
                     </button>
@@ -154,7 +154,7 @@ const Home = () => {
                         navigate("/login");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors border-b border-[#ede9e3]"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors border-b border-[#ede9e3]"
                     >
                       <LogIn size={14} /> LOGIN
                     </button>
@@ -163,7 +163,7 @@ const Home = () => {
                         navigate("/register");
                         setShowUserMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-[#faf9f7] transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-[10px] tracking-[0.2em] font-bold hover:bg-transparent transition-colors"
                     >
                       <UserPlus size={14} /> SIGN UP
                     </button>
@@ -174,7 +174,7 @@ const Home = () => {
           </div>
 
           {user && (
-            <div className="flex gap-8 items-center">
+            <div className="flex gap-2 sm:gap-4 md:gap-8 items-center">
               <div
                 className="cursor-pointer hover:text-[#999] transition-colors"
                 onClick={() => navigate("/orders")}
@@ -235,7 +235,7 @@ const Home = () => {
                 key={product._id}
                 className="group cursor-pointer"
               >
-                <div className="aspect-[3/4] bg-[#f2f1ef] overflow-hidden rounded-sm relative mb-6">
+                <div className="aspect-[3/4] bg-[#0a0a0a]/5 overflow-hidden rounded-sm relative mb-6">
                   {product.images && product.images.length > 0 ? (
                     <img
                       src={product.images[0].url}
@@ -248,7 +248,7 @@ const Home = () => {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 flex items-center justify-center">
-                    <div className="bg-white px-6 py-3 text-[9px] tracking-[0.2em] font-bold uppercase opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl">
+                    <div className="bg-white/60 backdrop-blur-xl  border border-[#ede9e3] px-6 py-3 text-[9px] tracking-[0.2em] font-bold uppercase opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl">
                       View Details
                     </div>
                   </div>
@@ -274,7 +274,7 @@ const Home = () => {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white">
+      <footer className="border-t border-[#ede9e3] py-24 px-6 md:px-12 text-center bg-white/60 backdrop-blur-xl  border border-[#ede9e3]">
         <h2 className="font-serif text-3xl mb-12 tracking-[0.2em] font-light">SNITCH</h2>
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 mb-12">
           {["PRIVACY", "TERMS", "STUDIO", "JOURNAL"].map((link) => (
