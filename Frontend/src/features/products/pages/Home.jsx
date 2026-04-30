@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-transparent text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-white">
       {/* ── Navigation ── */}
-      <nav className="flex justify-between items-center px-4 md:px-12 py-4 md:py-8 sticky top-0 bg-transparent/80 backdrop-blur-md z-50">
+      <nav className="flex justify-between items-center px-4 md:px-12 py-4 md:py-8 sticky top-0 bg-transparent z-50">
         <div className="flex-1 flex justify-start items-center gap-10">
           <Menu size={20} className="cursor-pointer hover:opacity-50 transition-opacity" />
           <div className="hidden lg:flex gap-8">
@@ -45,7 +45,7 @@ const Home = () => {
           SNITCH
         </div>
 
-        <div className="flex-1 flex justify-end gap-2 sm:gap-4 md:gap-8 items-center bg-transparent backdrop-blur-md md:backdrop-blur-none py-1 rounded-full relative z-10">
+        <div className="flex-1 flex justify-end gap-2 sm:gap-4 md:gap-8 items-center bg-transparent py-1 rounded-full relative z-10">
           <div className="relative group">
             <Search 
               size={20} 
